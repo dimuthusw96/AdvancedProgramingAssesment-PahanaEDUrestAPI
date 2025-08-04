@@ -1,6 +1,7 @@
 com\mycompany\pahana_edu_rest\resources\CustomerResources.class
 Utils\Item.class
 com\mycompany\pahana_edu_rest\JakartaRestConfiguration.class
+com\mycompany\pahana_edu_rest\resources\ItemResources.class
 Utils\Customer.class
 Utils\Utils.class
 com\mycompany\pahana_edu_rest\resources\JakartaEE10Resource.class

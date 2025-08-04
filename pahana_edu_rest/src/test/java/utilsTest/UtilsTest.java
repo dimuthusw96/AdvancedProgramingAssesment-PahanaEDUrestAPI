@@ -4,6 +4,7 @@
  */
 package utilsTest;
 import Utils.Customer;
+import Utils.Item;
 import Utils.Utils;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,5 +67,49 @@ public void setUp() {
         assertTrue(deleted);
 
         assertNull(utils.getCustomerById(customer.getId()));
+    }
+    
+    //itemtest
+    @Test
+    public void testGetItems() {
+        List<Item> items = utils.getItems();
+        assertNotNull(items);
+        assertTrue(items.size() >= 0);
+    }
+
+    @Test
+    public void testGetItemById() {
+        Item item = utils.getItemById(3);
+        assertNotNull(item);
+        assertEquals(3, item.getId());
+        assertNotNull(item.getName());
+    }
+
+    @Test
+    public void testCreateUpdateDeleteItem() {
+        Item item = new Item();
+        item.setName("Test Item");
+        item.setPrice(9.99);
+        item.setQuantity(100);
+
+        boolean created = utils.createItem(item);
+        assertTrue(created);
+        assertTrue(item.getId() > 0);
+
+        item.setName("Updated Item");
+        item.setPrice(19.99);
+        item.setQuantity(200);
+        boolean updated = utils.updateItem(item);
+        assertTrue(updated);
+
+        Item updatedItem = utils.getItemById(item.getId());
+        assertEquals("Updated Item", updatedItem.getName());
+        assertEquals(19.99, updatedItem.getPrice());
+        assertEquals(200, updatedItem.getQuantity());
+
+        boolean deleted = utils.deleteItem(item.getId());
+        assertTrue(deleted);
+
+        assertNull(utils.getItemById(item.getId()));
     }
 }
