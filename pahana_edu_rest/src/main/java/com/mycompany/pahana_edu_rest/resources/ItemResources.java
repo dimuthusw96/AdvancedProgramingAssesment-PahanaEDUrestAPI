@@ -17,6 +17,7 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import services.ItemService;
 
 /**
  *
@@ -26,20 +27,20 @@ import jakarta.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ItemResources {
-     private final Utils utils = new Utils();
+     private final services.ItemService itemservice=new ItemService();
     private final Gson gson = new Gson();
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItems() {
-        return Response.ok(gson.toJson(utils.getItems())).build();
+        return Response.ok(gson.toJson(itemservice.getItems())).build();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItem(@PathParam("id") int id) {
-        Item item = utils.getItemById(id);
+        Item item = itemservice.getItemById(id);
         if (item == null) {
             return Response.status(Response.Status.NOT_FOUND)
                            .entity("{\"error\":\"Item not found\"}")
@@ -53,7 +54,7 @@ public class ItemResources {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createItem(String itemJson) {
         Item item = gson.fromJson(itemJson, Item.class);
-        boolean created = utils.createItem(item);
+        boolean created = itemservice.createItem(item);
         if (created) {
             return Response.status(Response.Status.CREATED)
                            .entity(gson.toJson(item))
@@ -71,7 +72,7 @@ public class ItemResources {
     public Response updateItem(@PathParam("id") int id, String itemJson) {
         Item item = gson.fromJson(itemJson, Item.class);
         item.setId(id);
-        boolean updated = utils.updateItem(item);
+        boolean updated = itemservice.updateItem(item);
         if (updated) {
             return Response.ok(gson.toJson(item)).build();
         }
@@ -84,7 +85,7 @@ public class ItemResources {
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteItem(@PathParam("id") int id) {
-        boolean deleted = utils.deleteItem(id);
+        boolean deleted = itemservice.deleteItem(id);
         if (deleted) {
             return Response.noContent().build();
         }
