@@ -85,4 +85,21 @@ public class CustomerResources {
                     .build();
         }
     }
+    @POST
+@Path("/bulk")
+public Response createCustomersBulk(String customersJson) {
+    CustomerService service = new CustomerService();
+    Customer[] customers = new Gson().fromJson(customersJson, Customer[].class);
+
+    boolean success = true;
+    for (Customer c : customers) {
+        success &= service.createCustomer(c);
+    }
+
+    if (success) {
+        return Response.status(Response.Status.CREATED).entity("{\"message\":\"All customers created.\"}").build();
+    } else {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("{\"error\":\"Failed to create one or more customers.\"}").build();
+    }
+}
 }

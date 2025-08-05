@@ -1,0 +1,44 @@
+<h3>All Customers</h3>
+
+<table id="customerTable" class="striped-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Address</th>
+      <th>Mobile</th>
+      <th>Unit Consumed</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  fetch("http://localhost:8080/pahana_edu_rest/api/customers")
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch customers");
+      }
+      return response.json();
+    })
+    .then(customers => {
+      const tbody = document.querySelector("#customerTable tbody");
+      tbody.innerHTML = "";
+      customers.forEach(customer => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${customer.id}</td>
+          <td>${customer.name}</td>
+          <td>${customer.email}</td>
+          <td>${customer.address}</td>
+          <td>${customer.mobile}</td>
+          <td>${customer.unit_consumed}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    })
+    .catch(error => {
+      document.querySelector("#customerTable tbody").innerHTML = `<tr><td colspan="6">${error.message}</td></tr>`;
+    });
+</script>
