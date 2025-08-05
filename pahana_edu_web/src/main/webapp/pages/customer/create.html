@@ -1,0 +1,105 @@
+<h3>Bulk Customer Creation</h3>
+
+<form id="customerForm" onsubmit="event.preventDefault(); addCustomerToList();">
+  <input type="text" id="name" placeholder="Name" required>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="text" id="address" placeholder="Address" required>
+  <input type="text" id="mobile" placeholder="Mobile" required>
+  <input type="number" id="units" placeholder="Units Consumed" required>
+  <button type="submit">Add to List</button>
+</form>
+
+<h4>Pending Customers</h4>
+<table class="striped-table" id="previewTable" style="margin-top:10px;">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Address</th>
+      <th>Mobile</th>
+      <th>Units</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<button onclick="submitAllCustomers()" style="margin-top:10px;">Submit All</button>
+<div id="loadingSpinner" style="display:none; margin-top: 10px;">
+  <div class="spinner"></div> Saving, please wait...
+</div>
+<p id="message" style="color: green; font-weight: bold;"></p>
+
+<script>
+  let customerList = [];
+
+  function addCustomerToList() {
+    const customer = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      address: document.getElementById("address").value,
+      mobile: document.getElementById("mobile").value,
+      unit_consumed: parseInt(document.getElementById("units").value)
+    };
+
+    customerList.push(customer);
+    updatePreviewTable();
+    document.getElementById("customerForm").reset();
+  }
+
+  function updatePreviewTable() {
+    const tbody = document.querySelector("#previewTable tbody");
+    tbody.innerHTML = "";
+    customerList.forEach((c, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${c.name}</td>
+        <td>${c.email}</td>
+        <td>${c.address}</td>
+        <td>${c.mobile}</td>
+        <td>${c.unit_consumed}</td>
+        <td><button onclick="removeCustomer(${index})">Remove</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function removeCustomer(index) {
+    customerList.splice(index, 1);
+    updatePreviewTable();
+  }
+
+  function submitAllCustomers() {
+  if (customerList.length === 0) {
+    alert("Add at least one customer.");
+    return;
+  }
+
+  // Show spinner
+  document.getElementById("loadingSpinner").style.display = "block";
+
+  fetch("http://localhost:8080/pahana_edu_rest/api/customers/bulk", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(customerList)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Submission failed.");
+    return res.json();
+  })
+  .then(response => {
+    document.getElementById("message").textContent = "Customers created successfully!";
+    document.getElementById("message").style.color = "green";
+    customerList = [];
+    updatePreviewTable();
+  })
+  .catch(err => {
+    document.getElementById("message").textContent = "Error: " + err.message;
+    document.getElementById("message").style.color = "red";
+  })
+  .finally(() => {
+    // Hide spinner after request finished
+    document.getElementById("loadingSpinner").style.display = "none";
+  });
+}
+</script>

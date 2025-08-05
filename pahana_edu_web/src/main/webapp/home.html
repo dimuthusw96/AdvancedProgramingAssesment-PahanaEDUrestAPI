@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home - Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .submenu { display: none; background-color: #495057; padding-left: 20px; }
+    .submenu a { display: block; padding: 10px; color: white; text-decoration: none; }
+    .submenu a:hover { background-color: #6c757d; }
+    .menu-toggle { padding: 15px; cursor: pointer; color: white; }
+
+    #content { padding: 20px; background: #f8f9fa; min-height: 90vh; }
+  </style>
+</head>
+<body onload="checkLogin()">
+
+  <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+  <div class="sidebar" id="sidebar">
+    <h3 style="text-align: center;">Dashboard</h3>
+
+    <div class="menu-toggle" onclick="toggleSubMenu()">Customer ▾</div>
+    <div class="submenu" id="customerSubMenu">
+      <a href="#" onclick="loadPage('pages/customer/view.html')">View All Customers</a>
+      <a href="#" onclick="loadPage('pages/customer/search.html')">Search Customer by ID</a>
+      <a href="#" onclick="loadPage('pages/customer/create.html')">Create Customer</a>
+      <a href="#" onclick="loadPage('pages/customer/update.html')">Update Customer</a>
+      <a href="#" onclick="loadPage('pages/customer/delete.html')">Delete Customer</a>
+    </div>
+
+    <a href="#" onclick="logout()">Logout</a>
+  </div>
+
+  <div class="main-content">
+    <h2>Welcome, <span id="username"></span></h2>
+    <div id="content">
+      <p>Please select a customer operation from the left menu.</p>
+    </div>
+  </div>
+
+  <script>
+    function checkLogin() {
+      const user = JSON.parse(sessionStorage.getItem("user"));
+      if (!user) window.location.href = "login.html";
+      else document.getElementById("username").innerText = user.userName;
+    }
+
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleSubMenu() {
+      const submenu = document.getElementById("customerSubMenu");
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+
+   function loadPage(pagePath) {
+  fetch(pagePath)
+    .then(res => res.text())
+    .then(html => {
+      const content = document.getElementById("content");
+      content.innerHTML = html;
+
+      // Manually re-run any <script> tags inside the loaded HTML
+      const scripts = content.querySelectorAll("script");
+      scripts.forEach(script => {
+        const newScript = document.createElement("script");
+        if (script.src) {
+          newScript.src = script.src;
+        } else {
+          newScript.textContent = script.textContent;
+        }
+        document.body.appendChild(newScript); // runs the script
+        script.remove(); // optional: clean up
+      });
+    })
+    .catch(error => {
+      document.getElementById("content").innerHTML = "<p>Page failed to load</p>";
+      console.error("Error loading page:", error);
+    });
+}
+  </script>
+</body>
+</html>

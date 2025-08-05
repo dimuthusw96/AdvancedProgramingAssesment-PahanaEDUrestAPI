@@ -9,6 +9,7 @@ import Utils.BillItem;
 import Utils.Customer;
 import Utils.Item;
 import Utils.Utils;
+import Utils.users;
 import java.util.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import java.util.List;
 import services.BillService;
 import services.CustomerService;
 import services.ItemService;
+import services.userssService;
 
 /**
  *
@@ -28,13 +30,15 @@ public class UtilsTest {
     public services.CustomerService customerService;
     public services.BillService billingservice;
     public services.ItemService itemService;
+    public services.userssService userService;
 
     @BeforeEach
     public void setUp() {
         utils = new Utils();
-        customerService=new CustomerService();
+        customerService = new CustomerService();
         billingservice = new BillService();
-        itemService =new ItemService();
+        itemService = new ItemService();
+        userService=new userssService();
         System.out.println("Utils instance created: " + utils);
     }
     // Customer tests
@@ -168,4 +172,67 @@ public class UtilsTest {
         customerService.deleteCustomer(customer.getId());
         itemService.deleteItem(item.getId());
     }
+
+    //users
+    @Test
+    public void testGetusers() {
+        List<users> user = userService.getusers();
+        assertNotNull(user);
+        assertTrue(user.size() >= 0);
+    }
+
+    @Test
+    public void testGetuserById() {
+        users user = userService.getUserById(3);
+        assertNotNull(user);
+        assertEquals(3, user.getId());
+        assertNotNull(user.getUserNname());
+    }
+
+    @Test
+public void testCreateUpdateDeleteuser() {
+    users user = new users();
+    user.setUserNname("Test user");
+    user.setPassword("pass");
+
+    boolean created = userService.createUser(user);
+    assertTrue(created);
+    assertTrue(user.getId() > 0); 
+
+    user.setUserNname("Updated user");
+    user.setPassword("passup");
+
+    boolean updated = userService.updateUser(user);
+    assertTrue(updated);
+
+    users updateduser = userService.getUserById(user.getId()); 
+    assertEquals("Updated user", updateduser.getUserNname());
+    assertEquals("passup", updateduser.getPassword());
+
+    boolean deleted = userService.deleteuser(user.getId());
+    assertTrue(deleted);
+
+    assertNull(userService.getUserById(user.getId())); 
+}
+
+    @Test
+public void testUserValidate_ValidCredentials_ReturnsTrue() {
+    users testUser = new users();
+    testUser.setUserNname("dsw");
+    testUser.setPassword("123");
+
+    boolean result = userService.userValidate(testUser);
+    assertTrue(result);
+}
+
+@Test
+public void testUserValidate_InvalidCredentials_ReturnsFalse() {
+    users testUser = new users();
+    testUser.setUserNname("nonexistent");
+    testUser.setPassword("wrongpass");
+
+    boolean result = userService.userValidate(testUser);
+    assertFalse(result);
+}
+
 }

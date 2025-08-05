@@ -1,13 +1,17 @@
+services\userssService.class
 Utils\Item.class
 Utils\Bill.class
 services\BillService.class
 Utils\Utils.class
 com\mycompany\pahana_edu_rest\resources\JakartaEE10Resource.class
+com\mycompany\pahana_edu_rest\resources\userResources.class
 services\CustomerService.class
 com\mycompany\pahana_edu_rest\resources\CustomerResources.class
 Utils\BillItem.class
 com\mycompany\pahana_edu_rest\JakartaRestConfiguration.class
 com\mycompany\pahana_edu_rest\resources\ItemResources.class
 com\mycompany\pahana_edu_rest\resources\BillResources.class
+filters\CORSFilter.class
 services\ItemService.class
 Utils\Customer.class
+Utils\users.class

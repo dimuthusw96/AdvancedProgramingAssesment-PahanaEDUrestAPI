@@ -1,0 +1,67 @@
+<h3>Search Customer by ID</h3>
+
+<div style="margin-bottom: 15px;">
+  <label for="customerId">Enter Customer ID:</label>
+  <input type="number" id="customerId" placeholder="Customer ID" />
+  <button onclick="searchCustomer()">Search</button>
+</div>
+
+<table id="resultTable" class="striped-table" style="display: none;">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Address</th>
+      <th>Mobile</th>
+      <th>Units</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="message" style="color: red;"></p>
+
+<script>
+  function searchCustomer() {
+    const id = document.getElementById("customerId").value.trim();
+    const table = document.getElementById("resultTable");
+    const message = document.getElementById("message");
+
+    if (!id) {
+      message.textContent = "Please enter a valid customer ID.";
+      table.style.display = "none";
+      return;
+    }
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`)
+      .then(res => {
+        if (res.status === 404) {
+          throw new Error("Customer not found.");
+        }
+        if (!res.ok) {
+          throw new Error("Failed to fetch customer.");
+        }
+        return res.json();
+      })
+      .then(customer => {
+        const tbody = table.querySelector("tbody");
+        tbody.innerHTML = `
+          <tr>
+            <td>${customer.id}</td>
+            <td>${customer.name}</td>
+            <td>${customer.email}</td>
+            <td>${customer.address}</td>
+            <td>${customer.mobile}</td>
+            <td>${customer.unit_consumed}</td>
+          </tr>
+        `;
+        message.textContent = "";
+        table.style.display = "table";
+      })
+      .catch(error => {
+        table.style.display = "none";
+        message.textContent = error.message;
+      });
+  }
+</script>
