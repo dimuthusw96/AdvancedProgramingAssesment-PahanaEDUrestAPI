@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="utilsTest.UtilsTest" time="0.695" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="utilsTest.UtilsTest" time="0.733" tests="7" errors="0" skipped="0" failures="0">
   <properties>
     <property name="netbeans.deploy" value="true"/>
     <property name="java.specification.version" value="17"/>
@@ -17,7 +17,7 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\Dimuthu\AppData\Local\Temp\surefire2790143572896132901\surefirebooter-20250805002459074_3.jar C:\Users\Dimuthu\AppData\Local\Temp\surefire2790143572896132901 2025-08-05T00-24-58_310-jvmRun1 surefire-20250805002459074_1tmp surefire_0-20250805002459074_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Dimuthu\AppData\Local\Temp\surefire1348636657058284569\surefirebooter-20250805020341353_3.jar C:\Users\Dimuthu\AppData\Local\Temp\surefire1348636657058284569 2025-08-05T02-03-40_623-jvmRun1 surefire-20250805020341353_1tmp surefire_0-20250805020341353_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="exec.vmArgs" value=""/>
     <property name="surefire.test.class.path" value="E:\Bsc(Hons) Software engineering (ICBT)\Advanced Programing\AdvancedProgramingAssesment-PahanaEDUrestAPI\pahana_edu_rest\target\test-classes;E:\Bsc(Hons) Software engineering (ICBT)\Advanced Programing\AdvancedProgramingAssesment-PahanaEDUrestAPI\pahana_edu_rest\target\classes;C:\Users\Dimuthu\.m2\repository\jakarta\platform\jakarta.jakartaee-api\10.0.0\jakarta.jakartaee-api-10.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\platform\jakarta.jakartaee-web-api\10.0.0\jakarta.jakartaee-web-api-10.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\servlet\jakarta.servlet-api\6.0.0\jakarta.servlet-api-6.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\servlet\jsp\jakarta.servlet.jsp-api\3.1.0\jakarta.servlet.jsp-api-3.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\el\jakarta.el-api\5.0.1\jakarta.el-api-5.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\servlet\jsp\jstl\jakarta.servlet.jsp.jstl-api\3.0.0\jakarta.servlet.jsp.jstl-api-3.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\faces\jakarta.faces-api\4.0.1\jakarta.faces-api-4.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\ws\rs\jakarta.ws.rs-api\3.1.0\jakarta.ws.rs-api-3.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\websocket\jakarta.websocket-api\2.1.0\jakarta.websocket-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\websocket\jakarta.websocket-client-api\2.1.0\jakarta.websocket-client-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\json\jakarta.json-api\2.1.0\jakarta.json-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\json\bind\jakarta.json.bind-api\3.0.0\jakarta.json.bind-api-3.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\ejb\jakarta.ejb-api\4.0.1\jakarta.ejb-api-4.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\Dimuthu\.m2\repository\jakarta\interceptor\jakarta.interceptor-api\2.1.0\jakarta.interceptor-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\enterprise\jakarta.enterprise.cdi-api\4.0.1\jakarta.enterprise.cdi-api-4.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\enterprise\jakarta.enterprise.lang-model\4.0.1\jakarta.enterprise.lang-model-4.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\Dimuthu\.m2\repository\jakarta\authentication\jakarta.authentication-api\3.0.0\jakarta.authentication-api-3.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\security\enterprise\jakarta.security.enterprise-api\3.0.0\jakarta.security.enterprise-api-3.0.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\jms\jakarta.jms-api\3.1.0\jakarta.jms-api-3.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.0\jakarta.activation-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\mail\jakarta.mail-api\2.1.0\jakarta.mail-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\resource\jakarta.resource-api\2.1.0\jakarta.resource-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\authorization\jakarta.authorization-api\2.1.0\jakarta.authorization-api-2.1.0.jar;C:\Users\Dimuthu\.m2\repository\jakarta\batch\jakarta.batch-api\2.1.1\jakarta.batch-api-2.1.1.jar;C:\Users\Dimuthu\.m2\repository\com\mysql\mysql-connector-j\9.3.0\mysql-connector-j-9.3.0.jar;C:\Users\Dimuthu\.m2\repository\com\google\protobuf\protobuf-java\4.29.0\protobuf-java-4.29.0.jar;C:\Users\Dimuthu\.m2\repository\com\google\code\gson\gson\2.10.1\gson-2.10.1.jar;C:\Users\Dimuthu\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.10.0\junit-jupiter-api-5.10.0.jar;C:\Users\Dimuthu\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Dimuthu\.m2\repository\org\junit\platform\junit-platform-commons\1.10.0\junit-platform-commons-1.10.0.jar;C:\Users\Dimuthu\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Dimuthu\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.10.0\junit-jupiter-params-5.10.0.jar;C:\Users\Dimuthu\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.10.0\junit-jupiter-engine-5.10.0.jar;C:\Users\Dimuthu\.m2\repository\org\junit\platform\junit-platform-engine\1.10.0\junit-platform-engine-1.10.0.jar;C:\Users\Dimuthu\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;"/>
@@ -33,7 +33,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\Dimuthu\AppData\Local\Temp\surefire2790143572896132901\surefirebooter-20250805002459074_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Dimuthu\AppData\Local\Temp\surefire1348636657058284569\surefirebooter-20250805020341353_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -60,28 +60,34 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testGetCustomerById" classname="utilsTest.UtilsTest" time="0.5">
-    <system-out><![CDATA[Utils instance created: Utils.Utils@694abbdc
+  <testcase name="testGetCustomerById" classname="utilsTest.UtilsTest" time="0.477">
+    <system-out><![CDATA[Utils instance created: Utils.Utils@2d7275fc
 ]]></system-out>
   </testcase>
   <testcase name="testGetItemById" classname="utilsTest.UtilsTest" time="0.014">
-    <system-out><![CDATA[Utils instance created: Utils.Utils@35a3d49f
+    <system-out><![CDATA[Utils instance created: Utils.Utils@64ec96c6
 ]]></system-out>
   </testcase>
-  <testcase name="testGetCustomers" classname="utilsTest.UtilsTest" time="0.026">
-    <system-out><![CDATA[Utils instance created: Utils.Utils@6ca18a14
+  <testcase name="testGetCustomers" classname="utilsTest.UtilsTest" time="0.013">
+    <system-out><![CDATA[Utils instance created: Utils.Utils@1ec9bd38
 ]]></system-out>
   </testcase>
-  <testcase name="testGetItems" classname="utilsTest.UtilsTest" time="0.012">
-    <system-out><![CDATA[Utils instance created: Utils.Utils@6b0d80ed
+  <testcase name="testGetItems" classname="utilsTest.UtilsTest" time="0.01">
+    <system-out><![CDATA[Utils instance created: Utils.Utils@4b2c5e02
 ]]></system-out>
   </testcase>
-  <testcase name="testCreateUpdateDeleteItem" classname="utilsTest.UtilsTest" time="0.048">
-    <system-out><![CDATA[Utils instance created: Utils.Utils@928763c
+  <testcase name="testCreateUpdateDeleteItem" classname="utilsTest.UtilsTest" time="0.053">
+    <system-out><![CDATA[Utils instance created: Utils.Utils@4bc222e
 ]]></system-out>
   </testcase>
-  <testcase name="testCreateUpdateDeleteCustomer" classname="utilsTest.UtilsTest" time="0.04">
-    <system-out><![CDATA[Utils instance created: Utils.Utils@93081b6
+  <testcase name="testCreateUpdateDeleteCustomer" classname="utilsTest.UtilsTest" time="0.035">
+    <system-out><![CDATA[Utils instance created: Utils.Utils@205d38da
+]]></system-out>
+  </testcase>
+  <testcase name="testCreateBill" classname="utilsTest.UtilsTest" time="0.064">
+    <system-out><![CDATA[Utils instance created: Utils.Utils@72ef8d15
+✅ Processing item ID: 125 Qty: 2
+✅ Bill creation successful
 ]]></system-out>
   </testcase>
 </testsuite>

@@ -1,7 +1,13 @@
-com\mycompany\pahana_edu_rest\resources\CustomerResources.class
 Utils\Item.class
-com\mycompany\pahana_edu_rest\JakartaRestConfiguration.class
-com\mycompany\pahana_edu_rest\resources\ItemResources.class
-Utils\Customer.class
+Utils\Bill.class
+services\BillService.class
 Utils\Utils.class
 com\mycompany\pahana_edu_rest\resources\JakartaEE10Resource.class
+services\CustomerService.class
+com\mycompany\pahana_edu_rest\resources\CustomerResources.class
+Utils\BillItem.class
+com\mycompany\pahana_edu_rest\JakartaRestConfiguration.class
+com\mycompany\pahana_edu_rest\resources\ItemResources.class
+com\mycompany\pahana_edu_rest\resources\BillResources.class
+services\ItemService.class
+Utils\Customer.class
