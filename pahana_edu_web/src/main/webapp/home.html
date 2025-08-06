@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Home - Dashboard</title>
+  <title>Pahana EDU ERP</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
     .submenu { display: none; background-color: #495057; padding-left: 20px; }
@@ -18,7 +18,7 @@
   <button class="toggle-btn" onclick="toggleSidebar()">☰ Menu</button>
 
   <div class="sidebar" id="sidebar">
-    <h3 style="text-align: center;">Dashboard</h3>
+    <h3 style="text-align: center;">Panaha EDU ERP</h3>
 
     <div class="menu-toggle" onclick="toggleSubMenuCustomer()">Customer ▾</div>
     <div class="submenu" id="customerSubMenu">
@@ -43,16 +43,31 @@
       <a href="#" onclick="loadPage('pages/billing/billreprint.html')">show previous bill</a>
       
     </div>
-
+<a href="#" onclick="loadPage('help.html')">Help</a>
     <a href="#" onclick="logout()">Logout</a>
   </div>
 
   <div class="main-content">
-    <h2><span id="username"></span></h2>
-    <div id="content">
-      <p>Please select a customer operation from the left menu.</p>
+  <h2>
+    <span id="username"></span>
+  </h2>
+  
+  <div id="content">
+    
+    <!-- Help Assistant -->
+    <div id="helpAssistant" style="
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f1f1f1;
+      border-left: 4px solid #007bff;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #333;" class="help-bubble" onclick="loadPage('help.html')">
+      💡 Need help? Click here to assist you.
     </div>
   </div>
+</div>
 
   <script>
    function checkLogin() {
