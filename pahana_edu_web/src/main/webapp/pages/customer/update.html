@@ -1,0 +1,93 @@
+<h3>Update Customer</h3>
+
+<form id="searchForm" onsubmit="event.preventDefault(); fetchCustomer();">
+  <label>Enter Customer ID:</label>
+  <input type="number" id="searchCustomerId" required>
+  <button type="submit">Load Customer</button>
+</form>
+
+<div id="updateSection" style="display: none; margin-top: 20px;">
+  <form id="updateForm" onsubmit="event.preventDefault(); updateCustomer();">
+    <input type="hidden" id="customerId">
+
+    <label>Name:</label>
+    <input type="text" id="name" required><br>
+
+    <label>Email:</label>
+    <input type="email" id="email" required><br>
+
+    <label>Address:</label>
+    <input type="text" id="address" required><br>
+
+    <label>Mobile:</label>
+    <input type="text" id="mobile" required><br>
+
+    <label>Units Consumed:</label>
+    <input type="number" id="units" required><br><br>
+
+    <button type="submit">Update Customer</button>
+  </form>
+</div>
+
+<p id="message" style="font-weight: bold;"></p>
+
+<script>
+  function fetchCustomer() {
+    const id = document.getElementById("searchCustomerId").value;
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Customer not found.");
+        return res.json();
+      })
+      .then(customer => {
+        document.getElementById("customerId").value = customer.id;
+        document.getElementById("name").value = customer.name;
+        document.getElementById("email").value = customer.email;
+        document.getElementById("address").value = customer.address;
+        document.getElementById("mobile").value = customer.mobile;
+        document.getElementById("units").value = customer.unit_consumed;
+        document.getElementById("updateSection").style.display = "block";
+        document.getElementById("message").textContent = "";
+      })
+      .catch(err => {
+        document.getElementById("message").textContent = "❌ " + err.message;
+        document.getElementById("message").style.color = "red";
+        document.getElementById("updateSection").style.display = "none";
+      });
+  }
+
+  function updateCustomer() {
+    const id = document.getElementById("customerId").value;
+    const updatedCustomer = {
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      address: document.getElementById("address").value,
+      mobile: document.getElementById("mobile").value,
+      unit_consumed: parseInt(document.getElementById("units").value)
+    };
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedCustomer)
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Update failed.");
+      return res.json();
+    })
+    .then(data => {
+      document.getElementById("message").textContent = "✅ Customer updated successfully!";
+      document.getElementById("message").style.color = "green";
+      document.getElementById("customerId").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("email").value ="";
+        document.getElementById("address").value = "";
+        document.getElementById("mobile").value = "";
+        document.getElementById("units").value = "";
+    })
+    .catch(err => {
+      document.getElementById("message").textContent = "❌ " + err.message;
+      document.getElementById("message").style.color = "red";
+    });
+  }
+</script>

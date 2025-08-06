@@ -1,0 +1,75 @@
+<h3>Delete Customer</h3>
+
+<!-- Step 1: Enter ID -->
+<form id="fetchForm" onsubmit="event.preventDefault(); fetchCustomer();">
+  <label>Enter Customer ID:</label>
+  <input type="number" id="searchId" required>
+  <button type="submit">Find</button>
+</form>
+
+<!-- Step 2: Show customer info -->
+<div id="customerDetails" style="display:none; margin-top: 20px;">
+  <h4>Customer Info</h4>
+  <p><strong>Name:</strong> <span id="cname"></span></p>
+  <p><strong>Email:</strong> <span id="cemail"></span></p>
+  <p><strong>Address:</strong> <span id="caddress"></span></p>
+  <p><strong>Mobile:</strong> <span id="cmobile"></span></p>
+  <p><strong>Units Consumed:</strong> <span id="cunits"></span></p>
+  <button onclick="deleteCustomer()">❌ Delete This Customer</button>
+</div>
+
+<p id="message" style="font-weight: bold;"></p>
+
+<script>
+  let selectedCustomerId = null;
+
+  function fetchCustomer() {
+    const id = document.getElementById("searchId").value;
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Customer not found.");
+        return res.json();
+      })
+      .then(customer => {
+        selectedCustomerId = customer.id;
+        document.getElementById("cname").textContent = customer.name;
+        document.getElementById("cemail").textContent = customer.email;
+        document.getElementById("caddress").textContent = customer.address;
+        document.getElementById("cmobile").textContent = customer.mobile;
+        document.getElementById("cunits").textContent = customer.unit_consumed;
+        document.getElementById("customerDetails").style.display = "block";
+        document.getElementById("message").textContent = "";
+      })
+      .catch(err => {
+        document.getElementById("customerDetails").style.display = "none";
+        document.getElementById("message").textContent = "❌ " + err.message;
+        document.getElementById("message").style.color = "red";
+      });
+  }
+
+  function deleteCustomer() {
+    if (!selectedCustomerId) return;
+
+    if (!confirm("Are you sure you want to delete this customer?")) return;
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${selectedCustomerId}`, {
+      method: "DELETE"
+    })
+    .then(res => {
+      if (res.status === 204) {
+        document.getElementById("message").textContent = "✅ Customer deleted successfully.";
+        document.getElementById("message").style.color = "green";
+        document.getElementById("customerDetails").style.display = "none";
+      } else if (res.status === 404) {
+        throw new Error("Customer not found.");
+      } else {
+        throw new Error("Deletion failed.");
+      }
+    })
+    .catch(err => {
+      document.getElementById("message").textContent = "❌ " + err.message;
+      document.getElementById("message").style.color = "red";
+    });
+  }
+</script>

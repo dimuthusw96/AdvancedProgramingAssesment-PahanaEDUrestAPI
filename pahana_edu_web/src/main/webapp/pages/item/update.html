@@ -1,0 +1,82 @@
+<h3>Update Item</h3>
+
+<!-- Search section -->
+<label>Enter Item ID:</label>
+<input type="number" id="searchId">
+<button onclick="searchItem()">Search</button>
+<p id="searchMsg"></p>
+
+<!-- Update form -->
+<form id="updateForm" style="display: none;" onsubmit="event.preventDefault(); updateItem();">
+  <label>Item Name:</label>
+  <input type="text" id="itemName" required><br>
+
+  <label>Price:</label>
+  <input type="number" id="itemPrice" step="0.01" required><br>
+
+  <label>Quantity:</label>
+  <input type="number" id="itemQty" required><br><br>
+
+  <button type="submit">Update Item</button>
+</form>
+
+<p id="updateMsg"></p>
+
+<script>
+  let currentItemId = null;
+
+  function searchItem() {
+    const id = document.getElementById("searchId").value;
+    if (!id) return;
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/items/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Item not found");
+        return res.json();
+      })
+      .then(item => {
+        currentItemId = item.id;
+        document.getElementById("itemName").value = item.name;
+        document.getElementById("itemPrice").value = item.price;
+        document.getElementById("itemQty").value = item.quantity;
+        document.getElementById("updateForm").style.display = "block";
+        document.getElementById("searchMsg").textContent = "";
+        document.getElementById("updateMsg").textContent = "";
+      })
+      .catch(err => {
+        document.getElementById("updateForm").style.display = "none";
+        document.getElementById("searchMsg").textContent = "❌ " + err.message;
+        document.getElementById("searchMsg").style.color = "red";
+      });
+  }
+
+  function updateItem() {
+    const updatedItem = {
+      id: currentItemId,
+      name: document.getElementById("itemName").value,
+      price: parseFloat(document.getElementById("itemPrice").value),
+      quantity: parseInt(document.getElementById("itemQty").value)
+    };
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/items/${currentItemId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedItem)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("Update failed");
+        return res.json();
+      })
+      .then(data => {
+        document.getElementById("updateMsg").textContent = "✅ Item updated successfully!";
+        document.getElementById("updateMsg").style.color = "green";
+        document.getElementById("itemName").value = "";
+        document.getElementById("itemPrice").value = "";
+        document.getElementById("itemQty").value = "";
+      })
+      .catch(err => {
+        document.getElementById("updateMsg").textContent = "❌ " + err.message;
+        document.getElementById("updateMsg").style.color = "red";
+      });
+  }
+</script>
