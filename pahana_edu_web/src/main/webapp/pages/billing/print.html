@@ -55,44 +55,49 @@
   </div>
 
   <script>
-    function formatDateTime(dateString) {
-      const date = new Date(dateString);
-      return date.toLocaleString();
-    }
+  function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString();
+  }
 
-    function loadBill() {
-      const params = new URLSearchParams(window.location.search);
-      const billId = params.get("billId");
-      if (!billId) return alert("No bill ID provided");
+  function loadBill() {
+    const params = new URLSearchParams(window.location.search);
+    const billId = params.get("billId");
+    if (!billId) return alert("No bill ID provided");
 
-      // You should create a GET endpoint like: /api/bills/{id}
-      fetch(`http://localhost:8080/pahana_edu_rest/api/bills/${billId}`)
-        .then(res => {
-          if (!res.ok) throw new Error("Failed to load bill");
-          return res.json();
-        })
-        .then(bill => {
-          document.getElementById("billId").textContent = bill.id;
-          document.getElementById("customerName").textContent = bill.customer.name;
-          document.getElementById("billDate").textContent = formatDateTime(bill.billDate);
-          document.getElementById("totalAmount").textContent = bill.totalAmount.toFixed(2);
+    fetch(`http://localhost:8080/pahana_edu_rest/api/bills/${billId}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to load bill");
+        return res.json();
+      })
+      .then(bill => {
+        document.getElementById("billId").textContent = bill.id;
+        document.getElementById("customerName").textContent = bill.customer.name;
+        document.getElementById("billDate").textContent = formatDateTime(bill.billDate);
+        document.getElementById("totalAmount").textContent = bill.totalAmount.toFixed(2);
 
-          const tbody = document.getElementById("billItems");
-          tbody.innerHTML = "";
-          bill.billItems.forEach(item => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${item.item.id}</td>
-              <td>${item.item.name}</td>
-              <td>${item.price.toFixed(2)}</td>
-              <td>${item.quantity}</td>
-              <td>${item.subtotal.toFixed(2)}</td>
-            `;
-            tbody.appendChild(row);
-          });
-        })
-        .catch(err => alert(err.message));
-    }
-  </script>
+        const tbody = document.getElementById("billItems");
+        tbody.innerHTML = "";
+        bill.billItems.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${item.item.id}</td>
+            <td>${item.item.name}</td>
+            <td>${item.price.toFixed(2)}</td>
+            <td>${item.quantity}</td>
+            <td>${item.subtotal.toFixed(2)}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      })
+      .catch(err => alert(err.message));
+  }
+
+  // ✅ Redirect to create page after print dialog is closed
+  window.onafterprint = () => {
+    window.location.href = "create.html"; // change this to your actual create page
+  };
+</script>
+
 </body>
 </html>

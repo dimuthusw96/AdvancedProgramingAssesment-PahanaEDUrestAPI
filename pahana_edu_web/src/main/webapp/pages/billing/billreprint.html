@@ -1,0 +1,18 @@
+<h2>Search Previous Bill</h2>
+
+<form onsubmit="event.preventDefault(); redirectToBill();">
+  <label for="billId">Enter Bill Number:</label>
+  <input type="number" id="billId" required>
+  <button type="submit">🔍 View & Print Bill</button>
+</form>
+
+<script>
+  function redirectToBill() {
+    const billId = document.getElementById("billId").value;
+    if (!billId) {
+      alert("Please enter a bill number");
+      return;
+    }
+    window.location.href = `print-bill.html?billId=${billId}`;
+  }
+</script>
