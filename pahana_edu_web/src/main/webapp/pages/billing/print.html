@@ -4,18 +4,51 @@
   <meta charset="UTF-8">
   <title>Print Bill - Pahana Edu</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 30px; }
-    h2, h4 { text-align: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    table, th, td { border: 1px solid #000; }
-    th, td { padding: 8px; text-align: center; }
-    .signature-section { margin-top: 60px; display: flex; justify-content: space-between; }
-    .signature-box { width: 40%; text-align: center; }
-    #printBtn { margin: 20px 0; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    h2, h4 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #000;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    .signature-section {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature-box {
+      width: 40%;
+      text-align: center;
+    }
+    #controls {
+      margin-bottom: 20px;
+    }
+
+    @media print {
+      #controls {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body onload="loadBill()">
-  <button id="printBtn" onclick="window.print()">🖨️ Print</button>
+
+  <div id="controls">
+    <button onclick="goBack()">🔙 Back</button>
+    <button onclick="window.print()">🖨️ Print</button>
+  </div>
 
   <h2>Pahana Edu</h2>
   <h4>Invoice</h4>
@@ -65,7 +98,6 @@
       const billId = params.get("billId");
       if (!billId) return alert("No bill ID provided");
 
-      // You should create a GET endpoint like: /api/bills/{id}
       fetch(`http://localhost:8080/pahana_edu_rest/api/bills/${billId}`)
         .then(res => {
           if (!res.ok) throw new Error("Failed to load bill");
@@ -93,6 +125,15 @@
         })
         .catch(err => alert(err.message));
     }
+
+    function goBack() {
+      window.location.href = "create.html"; // 🔁 change this to your actual home/create page
+    }
+
+    // Auto-redirect to create page after printing
+    window.onafterprint = () => {
+      history.back(); // 🔁 change this too if needed
+    };
   </script>
 </body>
 </html>
