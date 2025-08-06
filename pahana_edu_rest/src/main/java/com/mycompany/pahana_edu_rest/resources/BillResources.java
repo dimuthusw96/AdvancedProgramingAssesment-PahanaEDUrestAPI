@@ -57,14 +57,19 @@ public class BillResources {
                     .build();
         }
     }
-    @GET
-@Path("/bills/{id}")
+    
+@Path("{id}")
+@GET
 @Produces(MediaType.APPLICATION_JSON)
 public Response getBillById(@PathParam("id") int id) {
     Bill bill = new Bill();
- String query="SELECT * FROM bills WHERE id = ?";
-    try (Connection conn = Utils.getConnection(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
-       
+    String query = "SELECT * FROM bills WHERE id = ?";
+
+    try (Connection conn = Utils.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(query)) {
+
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
             bill.setId(rs.getInt("id"));
@@ -73,10 +78,10 @@ public Response getBillById(@PathParam("id") int id) {
 
             // ✅ Get customer ID
             int customerId = rs.getInt("customer_id");
-            String custquery="SELECT * FROM customers WHERE id = ?";
-            PreparedStatement custStmt = conn.prepareStatement(query);
-// 🔄 Fetch full customer details
-            
+
+            // ❌ You used wrong query here previously
+            String custquery = "SELECT * FROM customers WHERE id = ?";
+            PreparedStatement custStmt = conn.prepareStatement(custquery);
             custStmt.setInt(1, customerId);
             ResultSet custRs = custStmt.executeQuery();
 
@@ -84,7 +89,7 @@ public Response getBillById(@PathParam("id") int id) {
             if (custRs.next()) {
                 customer.setId(custRs.getInt("id"));
                 customer.setName(custRs.getString("name"));
-                customer.setUnit_consumed(custRs.getInt("unit_consumed")); // if available
+                customer.setUnit_consumed(custRs.getInt("unit_consumed"));
             }
             bill.setCustomer(customer);
         }
@@ -102,7 +107,7 @@ public Response getBillById(@PathParam("id") int id) {
             bi.setPrice(itemRs.getDouble("price"));
             bi.setSubtotal(itemRs.getDouble("subtotal"));
 
-            // ✅ Fetch item info (including name)
+            // ✅ Fetch item info
             int itemId = itemRs.getInt("item_id");
             PreparedStatement itemDetailStmt = conn.prepareStatement("SELECT * FROM items WHERE id = ?");
             itemDetailStmt.setInt(1, itemId);
@@ -114,7 +119,6 @@ public Response getBillById(@PathParam("id") int id) {
                 item.setName(itemDetailRs.getString("name"));
                 item.setPrice(itemDetailRs.getDouble("price"));
                 item.setQuantity(itemDetailRs.getInt("quantity"));
-
                 bi.setItem(item);
             }
 
@@ -125,11 +129,12 @@ public Response getBillById(@PathParam("id") int id) {
 
     } catch (Exception e) {
         e.printStackTrace();
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Error fetching bill").build();
     }
 
     return Response.ok(bill).build();
 }
+
 
 }
 

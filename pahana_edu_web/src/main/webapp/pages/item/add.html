@@ -33,37 +33,47 @@
 
 <script>
   function createItem() {
-    const item = {
-      id: parseInt(document.getElementById("itemId").value),
-      name: document.getElementById("itemName").value,
-      price: parseFloat(document.getElementById("itemPrice").value),
-      quantity: parseInt(document.getElementById("itemQty").value)
-    };
+  const quantity = parseInt(document.getElementById("itemQty").value);
 
-    fetch("http://localhost:8080/pahana_edu_rest/api/items", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item)
-    })
-    .then(res => {
-      if (!res.ok) throw new Error("Item could not be created");
-      return res.json();
-    })
-    .then(data => {
-      document.getElementById("message").textContent = "✅ Item added successfully!";
-      document.getElementById("message").style.color = "green";
-
-      const table = document.getElementById("itemTable");
-      const tbody = document.getElementById("itemTableBody");
-      const row = tbody.insertRow();
-      row.innerHTML = `<td>${data.id}</td><td>${data.name}</td><td>${data.price}</td><td>${data.quantity}</td>`;
-      table.style.display = "table";
-
-      document.getElementById("itemForm").reset();
-    })
-    .catch(err => {
-      document.getElementById("message").textContent = "❌ " + err.message;
-      document.getElementById("message").style.color = "red";
-    });
+  // 🔴 Validate quantity not 0
+  if (quantity === 0) {
+    document.getElementById("message").textContent = "❌ Quantity must be greater than 0. Item not available.";
+    document.getElementById("message").style.color = "red";
+    return; // stop form submission
   }
+
+  const item = {
+    id: parseInt(document.getElementById("itemId").value),
+    name: document.getElementById("itemName").value,
+    price: parseFloat(document.getElementById("itemPrice").value),
+    quantity: quantity
+  };
+
+  fetch("http://localhost:8080/pahana_edu_rest/api/items", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  })
+  .then(res => {
+    if (!res.ok) throw new Error("Item could not be created");
+    return res.json();
+  })
+  .then(data => {
+    document.getElementById("message").textContent = "✅ Item added successfully!";
+    document.getElementById("message").style.color = "green";
+
+    const table = document.getElementById("itemTable");
+    const tbody = document.getElementById("itemTableBody");
+    const row = tbody.insertRow();
+    row.innerHTML = `<td>${data.id}</td><td>${data.name}</td><td>${data.price}</td><td>${data.quantity}</td>`;
+    table.style.display = "table";
+
+    document.getElementById("itemForm").reset();
+  })
+  .catch(err => {
+    document.getElementById("message").textContent = "❌ " + err.message;
+    document.getElementById("message").style.color = "red";
+  });
+}
+
 </script>
