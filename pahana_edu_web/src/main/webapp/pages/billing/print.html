@@ -4,18 +4,51 @@
   <meta charset="UTF-8">
   <title>Print Bill - Pahana Edu</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 30px; }
-    h2, h4 { text-align: center; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    table, th, td { border: 1px solid #000; }
-    th, td { padding: 8px; text-align: center; }
-    .signature-section { margin-top: 60px; display: flex; justify-content: space-between; }
-    .signature-box { width: 40%; text-align: center; }
-    #printBtn { margin: 20px 0; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+    }
+    h2, h4 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #000;
+    }
+    th, td {
+      padding: 8px;
+      text-align: center;
+    }
+    .signature-section {
+      margin-top: 60px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .signature-box {
+      width: 40%;
+      text-align: center;
+    }
+    #controls {
+      margin-bottom: 20px;
+    }
+
+    @media print {
+      #controls {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body onload="loadBill()">
-  <button id="printBtn" onclick="window.print()">🖨️ Print</button>
+
+  <div id="controls">
+    <button onclick="goBack()">🔙 Back</button>
+    <button onclick="window.print()">🖨️ Print</button>
+  </div>
 
   <h2>Pahana Edu</h2>
   <h4>Invoice</h4>
@@ -55,49 +88,52 @@
   </div>
 
   <script>
-  function formatDateTime(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleString();
-  }
+    function formatDateTime(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString();
+    }
 
-  function loadBill() {
-    const params = new URLSearchParams(window.location.search);
-    const billId = params.get("billId");
-    if (!billId) return alert("No bill ID provided");
+    function loadBill() {
+      const params = new URLSearchParams(window.location.search);
+      const billId = params.get("billId");
+      if (!billId) return alert("No bill ID provided");
 
-    fetch(`http://localhost:8080/pahana_edu_rest/api/bills/${billId}`)
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to load bill");
-        return res.json();
-      })
-      .then(bill => {
-        document.getElementById("billId").textContent = bill.id;
-        document.getElementById("customerName").textContent = bill.customer.name;
-        document.getElementById("billDate").textContent = formatDateTime(bill.billDate);
-        document.getElementById("totalAmount").textContent = bill.totalAmount.toFixed(2);
+      fetch(`http://localhost:8080/pahana_edu_rest/api/bills/${billId}`)
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to load bill");
+          return res.json();
+        })
+        .then(bill => {
+          document.getElementById("billId").textContent = bill.id;
+          document.getElementById("customerName").textContent = bill.customer.name;
+          document.getElementById("billDate").textContent = formatDateTime(bill.billDate);
+          document.getElementById("totalAmount").textContent = bill.totalAmount.toFixed(2);
 
-        const tbody = document.getElementById("billItems");
-        tbody.innerHTML = "";
-        bill.billItems.forEach(item => {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td>${item.item.id}</td>
-            <td>${item.item.name}</td>
-            <td>${item.price.toFixed(2)}</td>
-            <td>${item.quantity}</td>
-            <td>${item.subtotal.toFixed(2)}</td>
-          `;
-          tbody.appendChild(row);
-        });
-      })
-      .catch(err => alert(err.message));
-  }
+          const tbody = document.getElementById("billItems");
+          tbody.innerHTML = "";
+          bill.billItems.forEach(item => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${item.item.id}</td>
+              <td>${item.item.name}</td>
+              <td>${item.price.toFixed(2)}</td>
+              <td>${item.quantity}</td>
+              <td>${item.subtotal.toFixed(2)}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        })
+        .catch(err => alert(err.message));
+    }
 
-  // ✅ Redirect to create page after print dialog is closed
-  window.onafterprint = () => {
-    window.location.href = "create.html"; // change this to your actual create page
-  };
-</script>
+    function goBack() {
+      window.location.href = "create.html"; // 🔁 change this to your actual home/create page
+    }
 
+    // Auto-redirect to create page after printing
+    window.onafterprint = () => {
+      history.back(); // 🔁 change this too if needed
+    };
+  </script>
 </body>
 </html>
