@@ -1,0 +1,74 @@
+<h3>Item View</h3>
+
+<!-- Controls -->
+<button onclick="loadAllItems()">View All Items</button><br><br>
+
+<label>Search by ID:</label>
+<input type="number" id="searchId">
+<button onclick="searchItemById()">Search</button>
+
+<!-- Message -->
+<p id="viewMsg" style="margin-top: 10px;"></p>
+
+<!-- Table -->
+<table id="itemTable" border="1" style="margin-top: 15px; display: none;" class="striped-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody id="itemTableBody"></tbody>
+</table>
+
+<script>
+  function loadAllItems() {
+    fetch("http://localhost:8080/pahana_edu_rest/api/items")
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to load items");
+        return res.json();
+      })
+      .then(data => {
+        populateTable(data);
+        document.getElementById("viewMsg").textContent = "✅ Loaded all items.";
+      })
+      .catch(err => {
+        document.getElementById("viewMsg").textContent = "❌ " + err.message;
+      });
+  }
+
+  function searchItemById() {
+    const id = document.getElementById("searchId").value;
+    if (!id) {
+      document.getElementById("viewMsg").textContent = "❌ Enter a valid ID.";
+      return;
+    }
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/items/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error("Item not found");
+        return res.json();
+      })
+      .then(item => {
+        populateTable([item]); // Wrap single item in array
+        document.getElementById("viewMsg").textContent = `✅ Showing item ID ${item.id}`;
+      })
+      .catch(err => {
+        document.getElementById("itemTable").style.display = "none";
+        document.getElementById("viewMsg").textContent = "❌ " + err.message;
+      });
+  }
+
+  function populateTable(items) {
+    const tbody = document.getElementById("itemTableBody");
+    tbody.innerHTML = "";
+    items.forEach(item => {
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${item.id}</td><td>${item.name}</td><td>${item.price}</td><td>${item.quantity}</td>`;
+      tbody.appendChild(row);
+    });
+    document.getElementById("itemTable").style.display = "table";
+  }
+</script>

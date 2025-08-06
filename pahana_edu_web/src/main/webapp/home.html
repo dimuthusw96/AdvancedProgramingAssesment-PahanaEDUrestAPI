@@ -20,7 +20,7 @@
   <div class="sidebar" id="sidebar">
     <h3 style="text-align: center;">Dashboard</h3>
 
-    <div class="menu-toggle" onclick="toggleSubMenu()">Customer ▾</div>
+    <div class="menu-toggle" onclick="toggleSubMenuCustomer()">Customer ▾</div>
     <div class="submenu" id="customerSubMenu">
       <a href="#" onclick="loadPage('pages/customer/view.html')">View All Customers</a>
       <a href="#" onclick="loadPage('pages/customer/search.html')">Search Customer by ID</a>
@@ -28,23 +28,42 @@
       <a href="#" onclick="loadPage('pages/customer/update.html')">Update Customer</a>
       <a href="#" onclick="loadPage('pages/customer/delete.html')">Delete Customer</a>
     </div>
+    
+    <div class="menu-toggle" onclick="toggleSubMenuItem()">Items ▾</div>
+    <div class="submenu" id="itemSubMenu">
+      <a href="#" onclick="loadPage('pages/item/add.html')">Add Item</a>
+      <a href="#" onclick="loadPage('pages/item/update.html')">Update Item</a>
+      <a href="#" onclick="loadPage('pages/item/delete.html')">Delete Item</a>
+      <a href="#" onclick="loadPage('pages/item/view.html')">View Item</a>
+    </div>
+    
+    <div class="menu-toggle" onclick="toggleSubMenubilling()">Billing ▾</div>
+    <div class="submenu" id="billingSubMenu">
+      <a href="#" onclick="loadPage('pages/bill/create.html')">Create New Bill</a>
+      <a href="#" onclick="loadPage('pages/bill/update.html')">show previous bill</a>
+      
+    </div>
 
     <a href="#" onclick="logout()">Logout</a>
   </div>
 
   <div class="main-content">
-    <h2>Welcome, <span id="username"></span></h2>
+    <h2><span id="username"></span></h2>
     <div id="content">
       <p>Please select a customer operation from the left menu.</p>
     </div>
   </div>
 
   <script>
-    function checkLogin() {
-      const user = JSON.parse(sessionStorage.getItem("user"));
-      if (!user) window.location.href = "login.html";
-      else document.getElementById("username").innerText = user.userName;
-    }
+   function checkLogin() {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    const greeting = getGreeting();
+    document.getElementById("username").innerText = `${greeting}, ${user.userName}`;
+  }
+}
 
     function logout() {
       sessionStorage.clear();
@@ -56,8 +75,18 @@
       sidebar.style.display = sidebar.style.display === "none" ? "block" : "none";
     }
 
-    function toggleSubMenu() {
+    function toggleSubMenuCustomer() {
       const submenu = document.getElementById("customerSubMenu");
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+    
+     function toggleSubMenuItem() {
+      const submenu = document.getElementById("itemSubMenu");
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+    
+    function toggleSubMenubilling() {
+      const submenu = document.getElementById("billingSubMenu");
       submenu.style.display = submenu.style.display === "block" ? "none" : "block";
     }
 
@@ -85,6 +114,16 @@
       document.getElementById("content").innerHTML = "<p>Page failed to load</p>";
       console.error("Error loading page:", error);
     });
+}
+function getGreeting() {
+  const hour = new Date().getHours();
+  if (hour < 12) {
+    return "Good Morning";
+  } else if (hour < 18) {
+    return "Good Afternoon";
+  } else {
+    return "Good Evening";
+  }
 }
   </script>
 </body>

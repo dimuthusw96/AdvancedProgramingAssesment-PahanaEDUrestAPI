@@ -1,0 +1,195 @@
+<h3>Create Bill</h3>
+
+<label>Customer ID:</label>
+<input type="number" id="customerIdInput" />
+<button onclick="loadCustomer()">Load Customer</button>
+<p id="customerName"></p>
+
+<hr/>
+
+<h4>Add Items</h4>
+<label>Item ID:</label>
+<input type="number" id="itemIdInput" />
+<button onclick="addItem()">Add Item</button>
+
+<table border="1" id="itemsTable" style="width: 100%; margin-top: 20px; display:none;">
+  <thead>
+    <tr>
+      <th>Item ID</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Available Qty</th>
+      <th>Quantity</th>
+      <th>Subtotal</th>
+      <th>Remove</th>
+    </tr>
+  </thead>
+  <tbody id="itemsBody"></tbody>
+</table>
+
+<h4>Total Bill: $<span id="totalBill">0.00</span></h4><br/>
+
+<button onclick="saveBill()">Save Bill</button>
+
+<p id="msg" style="color:red;"></p>
+
+<script>
+  let customer = null;
+  let items = [];
+
+  function loadCustomer() {
+    const custId = document.getElementById('customerIdInput').value;
+    if (!custId) {
+      alert('Please enter a Customer ID');
+      return;
+    }
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${custId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Customer not found');
+        return res.json();
+      })
+      .then(data => {
+        customer = data;
+        document.getElementById('customerName').textContent = `Customer Name: ${customer.name}`;
+        document.getElementById('msg').textContent = '';
+      })
+      .catch(err => {
+        customer = null;
+        document.getElementById('customerName').textContent = '';
+        document.getElementById('msg').textContent = err.message;
+      });
+  }
+
+  function addItem() {
+    const itemId = document.getElementById('itemIdInput').value;
+    if (!itemId) {
+      alert('Please enter an Item ID');
+      return;
+    }
+
+    // Avoid adding duplicate items
+    if (items.find(i => i.id == itemId)) {
+      alert('Item already added');
+      return;
+    }
+
+    fetch(`http://localhost:8080/pahana_edu_rest/api/items/${itemId}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Item not found');
+        return res.json();
+      })
+      .then(item => {
+        // Add qty=1 by default
+        item.quantitySelected = 1;
+        items.push(item);
+        renderItemsTable();
+        document.getElementById('itemIdInput').value = '';
+        document.getElementById('msg').textContent = '';
+      })
+      .catch(err => {
+        document.getElementById('msg').textContent = err.message;
+      });
+  }
+
+  function renderItemsTable() {
+    if (items.length === 0) {
+      document.getElementById('itemsTable').style.display = 'none';
+      document.getElementById('totalBill').textContent = '0.00';
+      return;
+    }
+
+    document.getElementById('itemsTable').style.display = 'table';
+    const tbody = document.getElementById('itemsBody');
+    tbody.innerHTML = '';
+
+    items.forEach((item, index) => {
+      const subtotal = (item.price * item.quantitySelected).toFixed(2);
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${item.price.toFixed(2)}</td>
+        <td>${item.quantity}</td>
+        <td>
+          <input type="number" min="1" max="${item.quantity}" value="${item.quantitySelected}" 
+            onchange="updateQty(${index}, this.value)" />
+        </td>
+        <td>${subtotal}</td>
+        <td><button onclick="removeItem(${index})">Remove</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    updateTotal();
+  }
+
+  function updateQty(index, qty) {
+    qty = Number(qty);
+    if (qty < 1) qty = 1;
+    if (qty > items[index].quantity) {
+      alert(`Quantity cannot exceed available stock (${items[index].quantity})`);
+      qty = items[index].quantity;
+    }
+    items[index].quantitySelected = qty;
+    renderItemsTable();
+  }
+
+  function removeItem(index) {
+    items.splice(index, 1);
+    renderItemsTable();
+  }
+
+  function updateTotal() {
+    let total = 0;
+    items.forEach(i => {
+      total += i.price * i.quantitySelected;
+    });
+    document.getElementById('totalBill').textContent = total.toFixed(2);
+  }
+
+  function saveBill() {
+    if (!customer) {
+      alert('Please load a valid customer first');
+      return;
+    }
+
+    if (items.length === 0) {
+      alert('Please add at least one item');
+      return;
+    }
+
+    const billItems = items.map(item => ({
+      item: { id: item.id },
+      quantity: item.quantitySelected,
+      price: item.price,
+      subtotal: item.price * item.quantitySelected
+    }));
+
+    const totalAmount = billItems.reduce((sum, i) => sum + i.subtotal, 0);
+
+    const bill = {
+      customer: { id: customer.id },
+      billDate: new Date(),
+      totalAmount: totalAmount,
+      billItems: billItems
+    };
+
+    fetch('http://localhost:8080/pahana_edu_rest/api/bills', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bill)
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to create bill');
+        return res.json();
+      })
+      .then(data => {
+        alert('Bill created successfully!');
+        window.location.href = `pages/bill/print.html?billId=${data.id}`;
+      })
+      .catch(err => {
+        alert(err.message);
+      });
+  }
+</script>
