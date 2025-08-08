@@ -1,0 +1,71 @@
+<h1>🆘 Help Section</h1>
+  <p class="lead">System Usage Guidelines for New Users</p>
+  <hr />
+
+  <div class="section">
+    <h3>✅ Step 1: Load a Customer</h3>
+    <ul>
+      <li>Enter the <strong>Customer ID</strong> in the input field.</li>
+      <li>Click <strong>"Load Customer"</strong>.</li>
+      <li>If the ID is valid, the customer's name will appear below.</li>
+      <li><span class="text-danger">If invalid, an error will be shown.</span></li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>✅ Step 2: Add Items to the Bill</h3>
+    <ul>
+      <li>Enter the <strong>Item ID</strong>.</li>
+      <li>Click <strong>"Add Item"</strong> to include it in the bill.</li>
+      <li>Each item will show:
+        <ul>
+          <li>Item name</li>
+          <li>Price</li>
+          <li>Available quantity</li>
+          <li>Quantity input (default is 1)</li>
+        </ul>
+      </li>
+      <li class="text-danger">You cannot add items with 0 stock or set quantity above stock.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>✅ Step 3: Review Items and Total</h3>
+    <ul>
+      <li>All items will be listed in a table.</li>
+      <li>You can change quantities (within stock limits).</li>
+      <li>Click <strong>"Remove"</strong> to delete any item.</li>
+      <li>The <strong>Total Bill</strong> will update automatically.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>✅ Step 4: Save the Bill</h3>
+    <ul>
+      <li>Once customer and items are set, click <strong>"Save Bill"</strong>.</li>
+      <li>The bill will be saved and redirected to a printable invoice page.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h3>🔁 View a Previous Bill</h3>
+    <p>To view a saved bill, use the link format:</p>
+    <code>http://localhost:8080/pages/billing/print.html?billId=YOUR_BILL_ID</code>
+  </div>
+
+  <div class="section">
+    <h3>🔙 Go Back to Home</h3>
+    <p>Use the browser's Back button or a "Back" button on the print page to return.</p>
+  </div>
+
+  <div class="section">
+    <h3>🛠 Troubleshooting</h3>
+    <ul>
+      <li><strong>“Customer not found”</strong> → Invalid customer ID.</li>
+      <li><strong>“Item not found”</strong> → Invalid item ID.</li>
+      <li><strong>“Quantity cannot exceed available stock”</strong> → Set a lower quantity.</li>
+      <li><strong>“Item already added”</strong> → You cannot add the same item twice.</li>
+    </ul>
+  </div>
+
+  <button class="btn btn-primary back-button" onclick="history.back()">← Back</button>

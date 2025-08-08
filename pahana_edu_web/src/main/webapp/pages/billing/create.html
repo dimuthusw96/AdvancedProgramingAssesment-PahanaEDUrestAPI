@@ -191,7 +191,8 @@
       })
       .then(data => {
         alert('Bill created successfully!');
-        window.location.href = `pages/billing/print.html?billId=${data.id}`;
+        window.open(`pages/billing/print.html?billId=${data.id}`,'_blank');
+                
       })
       .catch(err => {
         alert(err.message);
