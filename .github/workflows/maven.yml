@@ -24,7 +24,8 @@ jobs:
         settings-path: ${{ github.workspace }}
 
     - name: Build with Maven
-      run: ../pahana_edu_web/pom.xml
+      run: mvn clean install
+      working-directory: pahana_edu_rest
 
     # Optional: Deploy only if PR is from same repo (not fork)
     - name: Publish to GitHub Packages Apache Maven
