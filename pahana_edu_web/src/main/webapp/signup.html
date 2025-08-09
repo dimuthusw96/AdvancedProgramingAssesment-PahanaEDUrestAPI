@@ -26,28 +26,64 @@
   </div>
 
   <script>
-    async function signup() {
-      const user = {
-        userName: document.getElementById("newUsername").value,
-        password: document.getElementById("newPassword").value
-      };
+      
+      async function isUsernameTaken(username) {
+  const response = await fetch("http://localhost:8080/pahana_edu_rest/api/user/alreadyuser", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ userName: username })
+  });
 
-      const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user)
-      });
+  if (!response.ok) {
+    // Handle error or assume username not taken
+    return false;
+  }
 
-      const msg = document.getElementById("signupMessage");
+  // The response body is a boolean (true/false)
+  const exists = await response.json(); // directly true or false
+  return exists;
+}
 
-      if (res.ok) {
-        msg.textContent = "Signup successful! You can now log in.";
-        msg.className = "text-success mt-2";
-      } else {
-        msg.textContent = "Signup failed.";
-        msg.className = "text-danger mt-2";
-      }
-    }
+async function signup() {
+  const msg = document.getElementById("signupMessage");
+  const usernameInput = document.getElementById("newUsername").value.trim();
+  const passwordInput = document.getElementById("newPassword").value;
+
+  if (!usernameInput || !passwordInput) {
+    msg.textContent = "Please enter username and password.";
+    msg.className = "text-danger mt-2";
+    return;
+  }
+
+  const taken = await isUsernameTaken(usernameInput);
+  if (taken) {
+    msg.textContent = "Username is already taken. Please choose another.";
+    msg.className = "text-danger mt-2";
+    return;
+  }
+
+  // Proceed with signup
+  const user = {
+    userName: usernameInput,
+    password: passwordInput
+  };
+
+  const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/create", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(user)
+  });
+
+  if (res.ok) {
+    msg.textContent = "Signup successful! You can now log in.";
+    msg.className = "text-success mt-2";
+  } else {
+    msg.textContent = "Signup failed.";
+    msg.className = "text-danger mt-2";
+  }
+}
+
+   
   </script>
 </body>
 </html>
