@@ -234,5 +234,13 @@ public void testUserValidate_InvalidCredentials_ReturnsFalse() {
     boolean result = userService.userValidate(testUser);
     assertFalse(result);
 }
+@Test
+public void testAvailableuser() {
+    users testUser = new users();
+    testUser.setUserNname("testuser");
+   
 
+    boolean result = userService.validUserByname(testUser);
+    assertFalse(result);
+}
 }
