@@ -19,6 +19,7 @@ import java.util.List;
  * @author Dimuthu
  */
 public class userssService {
+
     public List<users> getusers() {
         List<users> users = new ArrayList<>();
         String query = "SELECT * FROM users";
@@ -30,7 +31,7 @@ public class userssService {
                 user.setId(rs.getInt("id"));
                 user.setUserNname(rs.getString("userName"));
                 user.setPassword(rs.getString("password"));
-               
+
                 users.add(user);
             }
         } catch (SQLException e) {
@@ -38,29 +39,28 @@ public class userssService {
         }
         return users;
     }
-    
+
     public users getUserById(int id) {
-    String query = "SELECT * FROM users WHERE id = ?";
+        String query = "SELECT * FROM users WHERE id = ?";
 
-    try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
-        pstmt.setInt(1, id);
+        try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setInt(1, id);
 
-        ResultSet rs = pstmt.executeQuery();
-        if (rs.next()) {
-            users user = new users();
-            user.setId(rs.getInt("id"));
-            user.setUserNname(rs.getString("userName")); // or "userName" if corrected
-            user.setPassword(rs.getString("password"));
-            return user;
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                users user = new users();
+                user.setId(rs.getInt("id"));
+                user.setUserNname(rs.getString("userName")); // or "userName" if corrected
+                user.setPassword(rs.getString("password"));
+                return user;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return null;
     }
-    return null;
-}
 
-    
     public boolean createUser(users user) {
         String query = "INSERT INTO users (userName, password) VALUES (?, ?)";
 
@@ -68,7 +68,6 @@ public class userssService {
 
             pstmt.setString(1, user.getUserNname());
             pstmt.setString(2, user.getPassword());
-            
 
             int rowsInserted = pstmt.executeUpdate();
 
@@ -94,7 +93,6 @@ public class userssService {
             pstmt.setString(1, user.getUserNname());
             pstmt.setString(2, user.getPassword());
             pstmt.setInt(3, user.getId());
-           
 
             int rowsUpdated = pstmt.executeUpdate();
             return rowsUpdated > 0;
@@ -104,7 +102,7 @@ public class userssService {
         }
         return false;
     }
-    
+
     public boolean deleteuser(int id) {
         String query = "DELETE FROM users WHERE id = ?";
 
@@ -119,18 +117,31 @@ public class userssService {
         }
         return false;
     }
-    
+
     public boolean userValidate(users user) {
-    String query = "SELECT * FROM users WHERE userName = ? AND password = ?";
+        String query = "SELECT * FROM users WHERE userName = ? AND password = ?";
 
-    try (Connection conn = Utils.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(query)) {
+        try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
+            pstmt.setString(1, user.getUserNname());
+            pstmt.setString(2, user.getPassword());
+
+            ResultSet rs = pstmt.executeQuery();  // ✅ CORRECT
+            return rs.next();  // ✅ if a record exists, user is valid
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean validUserByname(users user) {
+    String query = "SELECT * FROM users WHERE userName = ?";
+
+    try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
         pstmt.setString(1, user.getUserNname());
-        pstmt.setString(2, user.getPassword());
 
-        ResultSet rs = pstmt.executeQuery();  // ✅ CORRECT
-        return rs.next();  // ✅ if a record exists, user is valid
+        ResultSet rs = pstmt.executeQuery();
+        return rs.next(); 
 
     } catch (SQLException e) {
         e.printStackTrace();

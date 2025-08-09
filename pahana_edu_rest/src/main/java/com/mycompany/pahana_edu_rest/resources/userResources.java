@@ -111,4 +111,22 @@ public Response validateUser(String userJson) {
                    .entity("{\"error\":\"Invalid credentials\"}")
                    .build();
 }
+
+ @POST
+@Path("/alreadyuser")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public Response checkUser(String userJson) {
+    users user = gson.fromJson(userJson, users.class);
+   boolean username = userservice.validUserByname(user);
+        if (username) {
+        return Response.status(Response.Status.CREATED)
+                       .entity(gson.toJson(user))
+                       .build();
+    }
+    return Response.status(Response.Status.UNAUTHORIZED) // More appropriate for failed login
+                   .entity("{\"error\":\"Invalid credentials\"}")
+                   .build();
+}
+
 }
