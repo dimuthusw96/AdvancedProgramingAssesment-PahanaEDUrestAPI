@@ -39,6 +39,20 @@ public class CustomerResources {
                     .build();
         }
     }
+    
+    @GET
+    @Path("mobile/{mobile}")
+    public Response getCustomermobile(@PathParam("mobile") int mobile) {
+        CustomerService customerservice = new CustomerService();
+        Customer customer = customerservice.getCustomerBymobile(mobile);
+        if (customer != null) {
+            return Response.ok(new Gson().toJson(customer)).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"Customer not found\"}")
+                    .build();
+        }
+    }
 
     @POST
     public Response createCustomer(String customerJson) {

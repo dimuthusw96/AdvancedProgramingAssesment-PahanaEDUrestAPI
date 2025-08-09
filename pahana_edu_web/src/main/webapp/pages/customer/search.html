@@ -1,7 +1,7 @@
 <h3>Search Customer by ID</h3>
 
 <div style="margin-bottom: 15px;">
-  <label for="customerId">Enter Customer ID:</label>
+  <label for="customerId">Mobile no:</label>
   <input type="number" id="customerId" placeholder="Customer ID" />
   <button onclick="searchCustomer()">Search</button>
 </div>
@@ -34,7 +34,7 @@
       return;
     }
 
-    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`)
+    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/mobile/${id}`)
       .then(res => {
         if (res.status === 404) {
           throw new Error("Customer not found.");

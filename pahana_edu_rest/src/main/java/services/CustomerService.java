@@ -131,4 +131,28 @@ public class CustomerService {
 
         return false;
     }
+    public Customer getCustomerBymobile(int mobile) {
+        Customer c = null;
+        String query = "SELECT * FROM customers WHERE mobile = ?";
+
+        try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt .setInt(1, mobile);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                c = new Customer();
+                c.setId(rs.getInt("id"));
+                c.setName(rs.getString("name"));
+                c.setEmail(rs.getString("email"));
+                c.setAddress(rs.getString("address"));
+                c.setMobile(rs.getString("mobile"));
+                c.setUnit_consumed(rs.getInt("unit_consumed"));
+            }
+
+        } catch (SQLException e) {
+        }
+
+        return c;
+    }
 }
