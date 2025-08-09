@@ -1,71 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🆘 Pahana Edu Web - Help</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body { padding: 20px; background: #f8f9fa; }
+    h1 { color: #007bff; }
+    .section { margin-bottom: 25px; }
+    .text-danger { font-weight: bold; }
+    code { background: #eee; padding: 2px 5px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
 <h1>🆘 Help Section</h1>
-  <p class="lead">System Usage Guidelines for New Users</p>
-  <hr />
+<p class="lead">System Usage Guidelines for New Users</p>
+<hr/>
 
-  <div class="section">
-    <h3>✅ Step 1: Load a Customer</h3>
-    <ul>
-      <li>Enter the <strong>Customer ID</strong> in the input field.</li>
-      <li>Click <strong>"Load Customer"</strong>.</li>
-      <li>If the ID is valid, the customer's name will appear below.</li>
-      <li><span class="text-danger">If invalid, an error will be shown.</span></li>
-    </ul>
-  </div>
+<div class="section">
+  <h3>✅ Step 1: Log In</h3>
+  <ul>
+    <li>Go to <code>/login.html</code>.</li>
+    <li>Enter your <strong>Username</strong> and <strong>Password</strong>.</li>
+    <li>Click <strong>"Login"</strong> to access the system.</li>
+    <li class="text-danger">If login fails, check your credentials or contact admin.</li>
+  </ul>
+</div>
 
-  <div class="section">
-    <h3>✅ Step 2: Add Items to the Bill</h3>
-    <ul>
-      <li>Enter the <strong>Item ID</strong>.</li>
-      <li>Click <strong>"Add Item"</strong> to include it in the bill.</li>
-      <li>Each item will show:
-        <ul>
-          <li>Item name</li>
-          <li>Price</li>
-          <li>Available quantity</li>
-          <li>Quantity input (default is 1)</li>
-        </ul>
-      </li>
-      <li class="text-danger">You cannot add items with 0 stock or set quantity above stock.</li>
-    </ul>
-  </div>
+<div class="section">
+  <h3>✅ Step 2: Manage Customers</h3>
+  <ul>
+    <li>Navigate to the <strong>Customer</strong> menu.</li>
+    <li>Options available:
+      <ul>
+        <li><strong>Create</strong> – Add a new customer with details.</li>
+        <li><strong>View</strong> – See all customers.</li>
+        <li><strong>Search</strong> – Find customers by ID or name.</li>
+        <li><strong>Update</strong> – Modify customer details.</li>
+        <li><strong>Delete</strong> – Remove a customer.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
 
-  <div class="section">
-    <h3>✅ Step 3: Review Items and Total</h3>
-    <ul>
-      <li>All items will be listed in a table.</li>
-      <li>You can change quantities (within stock limits).</li>
-      <li>Click <strong>"Remove"</strong> to delete any item.</li>
-      <li>The <strong>Total Bill</strong> will update automatically.</li>
-    </ul>
-  </div>
+<div class="section">
+  <h3>✅ Step 3: Manage Items</h3>
+  <ul>
+    <li>Go to the <strong>Item</strong> menu.</li>
+    <li>Available actions:
+      <ul>
+        <li><strong>Add</strong> – Enter Item ID, name, price, and stock quantity.</li>
+        <li><strong>View</strong> – List of all items.</li>
+        <li><strong>Update</strong> – Edit item details.</li>
+        <li><strong>Delete</strong> – Remove items from stock.</li>
+      </ul>
+    </li>
+  </ul>
+</div>
 
-  <div class="section">
-    <h3>✅ Step 4: Save the Bill</h3>
-    <ul>
-      <li>Once customer and items are set, click <strong>"Save Bill"</strong>.</li>
-      <li>The bill will be saved and redirected to a printable invoice page.</li>
-    </ul>
-  </div>
+<div class="section">
+  <h3>✅ Step 4: Create a Bill</h3>
+  <ul>
+    <li>Go to <strong>Billing → Create Bill</strong>.</li>
+    <li>Enter <strong>Customer ID</strong> and click <strong>"Load Customer"</strong>.</li>
+    <li class="text-danger">Invalid ID will show an error.</li>
+    <li>Enter <strong>Item ID</strong> and click <strong>"Add Item"</strong>:
+      <ul>
+        <li>Shows name, price, and stock.</li>
+        <li>Quantity defaults to 1, can be changed within stock limit.</li>
+        <li class="text-danger">Cannot add out-of-stock items or duplicates.</li>
+      </ul>
+    </li>
+    <li>Review all items in the table — update quantity or remove items.</li>
+    <li>Total amount updates automatically.</li>
+    <li>Click <strong>"Save Bill"</strong> to store it in the system.</li>
+  </ul>
+</div>
 
-  <div class="section">
-    <h3>🔁 View a Previous Bill</h3>
-    <p>To view a saved bill, use the link format:</p>
-    <code>http://localhost:8080/pages/billing/print.html?billId=YOUR_BILL_ID</code>
-  </div>
+<div class="section">
+  <h3>🔁 Step 5: Reprint/View Previous Bills</h3>
+  <ul>
+    <li>Go to <strong>Billing → Bill Reprint</strong>.</li>
+    <li>Enter the <strong>Bill ID</strong> and click <strong>"View"</strong>.</li>
+    <li>Or open directly via:
+      <code>http://localhost:8080/pages/billing/print.html?billId=YOUR_BILL_ID</code>
+    </li>
+  </ul>
+</div>
 
-  <div class="section">
-    <h3>🔙 Go Back to Home</h3>
-    <p>Use the browser's Back button or a "Back" button on the print page to return.</p>
-  </div>
+<div class="section">
+  <h3>🛠 Troubleshooting</h3>
+  <ul>
+    <li><strong>Customer not found</strong> → Check ID or create customer first.</li>
+    <li><strong>Item not found</strong> → Verify ID or add the item.</li>
+    <li><strong>Quantity exceeds stock</strong> → Reduce quantity.</li>
+    <li><strong>Duplicate item</strong> → Already in bill; remove before re-adding.</li>
+    <li><strong>Login issues</strong> → Reset password via admin.</li>
+  </ul>
+</div>
 
-  <div class="section">
-    <h3>🛠 Troubleshooting</h3>
-    <ul>
-      <li><strong>“Customer not found”</strong> → Invalid customer ID.</li>
-      <li><strong>“Item not found”</strong> → Invalid item ID.</li>
-      <li><strong>“Quantity cannot exceed available stock”</strong> → Set a lower quantity.</li>
-      <li><strong>“Item already added”</strong> → You cannot add the same item twice.</li>
-    </ul>
-  </div>
+<button class="btn btn-primary" onclick="history.back()">← Back</button>
 
-  <button class="btn btn-primary back-button" onclick="history.back()">← Back</button>
+</body>
+</html>
