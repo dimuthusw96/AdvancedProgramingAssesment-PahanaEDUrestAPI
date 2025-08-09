@@ -24,7 +24,7 @@ jobs:
     env:
       DB_HOST: localhost
       DB_PORT: 3306
-      DB_NAME: testdb
+      DB_NAME: pahana_edu
       DB_USER: root
       DB_PASSWORD: ""
     permissions:
