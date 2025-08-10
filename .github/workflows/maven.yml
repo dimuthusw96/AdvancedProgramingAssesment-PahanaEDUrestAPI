@@ -31,4 +31,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven (skip tests)
-        run: mvn clean install -DskipTests
+        run: |
+          cd ${{ github.workspace }}/pahana_edu_rest
+          mvn clean install -DskipTests
+        
