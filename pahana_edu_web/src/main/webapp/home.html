@@ -5,6 +5,8 @@
   <title>Pahana EDU ERP</title>
   <link rel="stylesheet" href="css/style.css" />
   <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
   <style>
     .submenu { display: none; background-color: #495057; padding-left: 20px; }
     .submenu a { display: block; padding: 10px; color: white; text-decoration: none; }
@@ -23,21 +25,21 @@
 
     <div class="menu-toggle" onclick="toggleSubMenuCustomer()">Customer ▾</div>
     <div class="submenu" id="customerSubMenu">
-      <a href="#" onclick="loadPage('pages/customer/view.html')">View All Customers</a>
+<!--      <a href="#" onclick="loadPage('pages/customer/view.html')">View All Customers</a>-->
       <a href="#" onclick="loadPage('pages/customer/customermanage.html')">Customers Management</a>
-      <a href="#" onclick="loadPage('pages/customer/search.html')">Search Customer by ID</a>
+<!--      <a href="#" onclick="loadPage('pages/customer/search.html')">Search Customer by ID</a>
       <a href="#" onclick="loadPage('pages/customer/create.html')">Create Customer</a>
       <a href="#" onclick="loadPage('pages/customer/update.html')">Update Customer</a>
-      <a href="#" onclick="loadPage('pages/customer/delete.html')">Delete Customer</a>
+      <a href="#" onclick="loadPage('pages/customer/delete.html')">Delete Customer</a>-->
     </div>
     
     <div class="menu-toggle" onclick="toggleSubMenuItem()">Items ▾</div>
     <div class="submenu" id="itemSubMenu">
-      <a href="#" onclick="loadPage('pages/item/add.html')">Add Item</a>
+<!--      <a href="#" onclick="loadPage('pages/item/add.html')">Add Item</a>-->
        <a href="#" onclick="loadPage('pages/item/itemmanage.html')">Item Management</a>
-      <a href="#" onclick="loadPage('pages/item/update.html')">Update Item</a>
+<!--      <a href="#" onclick="loadPage('pages/item/update.html')">Update Item</a>
       <a href="#" onclick="loadPage('pages/item/delete.html')">Delete Item</a>
-      <a href="#" onclick="loadPage('pages/item/view.html')">View Item</a>
+      <a href="#" onclick="loadPage('pages/item/view.html')">View Item</a>-->
     </div>
     
     <div class="menu-toggle" onclick="toggleSubMenubilling()">Billing ▾</div>
@@ -46,6 +48,14 @@
       <a href="#" onclick="loadPage('pages/billing/billreprint.html')">show previous bill</a>
       
     </div>
+    
+     <div class="menu-toggle" onclick="toggleSubMenureport()">Reports ▾</div>
+    <div class="submenu" id="reportSubMenu">
+      <a href="pages/reports/dailysalesereport.html" >Daily Sales Report</a>
+      
+    </div>
+    
+    
 <a href="#" onclick="loadPage('help.html')">Help</a>
     <a href="#" onclick="logout()">Logout</a>
   </div>
@@ -71,7 +81,7 @@
     </div>
   </div>
 </div>
-
+  
   <script>
    function checkLogin() {
   const user = JSON.parse(sessionStorage.getItem("user"));
@@ -107,7 +117,10 @@
       const submenu = document.getElementById("billingSubMenu");
       submenu.style.display = submenu.style.display === "block" ? "none" : "block";
     }
-
+function toggleSubMenureport() {
+      const submenu = document.getElementById("reportSubMenu");
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
    function loadPage(pagePath) {
   fetch(pagePath)
     .then(res => res.text())

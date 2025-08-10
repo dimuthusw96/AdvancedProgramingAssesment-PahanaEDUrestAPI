@@ -145,3 +145,20 @@ form button {
   }.btn-success {
 
 }
+ .card-header {
+            font-weight: 600;
+        }
+        .trend-up {
+            color: #28a745;
+        }
+        .trend-down {
+            color: #dc3545;
+        }
+        #loadingSpinner {
+            display: none;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
