@@ -1,0 +1,621 @@
+<div class="container mt-4">
+        <h2 class="text-center mb-4">Customer Management</h2>
+        
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="view-tab" data-bs-toggle="tab" data-bs-target="#view" type="button" role="tab">View Customers</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="create-tab" data-bs-toggle="tab" data-bs-target="#create" type="button" role="tab">Create Customer</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="update-tab" data-bs-toggle="tab" data-bs-target="#update" type="button" role="tab">Update Customer</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="delete-tab" data-bs-toggle="tab" data-bs-target="#delete" type="button" role="tab">Delete Customer</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="search-tab" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab">Search Customer</button>
+            </li>
+        </ul>
+        
+        <!-- Tab Content -->
+        <div class="tab-content p-3 border border-top-0 rounded-bottom" id="myTabContent">
+            <!-- View Tab -->
+            <div class="tab-pane fade show active" id="view" role="tabpanel">
+                <div class="d-flex justify-content-between mb-3">
+                    <h3>All Customers</h3>
+                    <button class="btn btn-primary" onclick="loadAllCustomers()">
+                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                    </button>
+                </div>
+                <div id="viewMessage" class="message"></div>
+                <div class="table-responsive">
+                    <table id="customerTable" class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Mobile</th>
+                                <th>Units</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customerTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Create Tab -->
+            <div class="tab-pane fade" id="create" role="tabpanel">
+                <h3 class="mb-4">Create New Customer</h3>
+                <form id="createForm">
+                    <div class="mb-3 row">
+                        <label for="createName" class="col-sm-2 col-form-label">Name:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="createName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="createEmail" class="col-sm-2 col-form-label">Email:</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="createEmail" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="createAddress" class="col-sm-2 col-form-label">Address:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="createAddress" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="createMobile" class="col-sm-2 col-form-label">Mobile:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="createMobile" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="createUnits" class="col-sm-2 col-form-label">Units Consumed:</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="createUnits" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="button" class="btn btn-success" onclick="createCustomer()">
+                                <i class="bi bi-person-plus"></i> Create Customer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div id="createMessage" class="message"></div>
+
+                <h4 class="mt-4">Bulk Creation</h4>
+                <form id="bulkForm" onsubmit="event.preventDefault(); addCustomerToList();">
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="bulkName" placeholder="Name" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="email" class="form-control" id="bulkEmail" placeholder="Email" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="bulkAddress" placeholder="Address" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="bulkMobile" placeholder="Mobile" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" id="bulkUnits" placeholder="Units" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus"></i> Add to List
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-responsive mt-3">
+                    <table id="bulkPreviewTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Mobile</th>
+                                <th>Units</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bulkPreviewBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <div id="bulkMessage" class="message"></div>
+                    <button class="btn btn-success" onclick="submitAllCustomers()">
+                        <i class="bi bi-save"></i> Submit All Customers
+                    </button>
+                </div>
+                <div id="loadingSpinner" class="d-flex align-items-center">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <span class="ms-2">Saving, please wait...</span>
+                </div>
+            </div>
+            
+            <!-- Update Tab -->
+            <div class="tab-pane fade" id="update" role="tabpanel">
+                <h3 class="mb-4">Update Customer</h3>
+                <div class="search-section">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="updateSearchId" class="col-form-label">Search by ID:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="number" id="updateSearchId" class="form-control">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" onclick="searchCustomerForUpdate()">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="updateSearchMessage" class="message"></div>
+
+                <form id="updateForm" style="display: none;">
+                    <input type="hidden" id="updateCustomerId">
+                    <div class="mb-3 row">
+                        <label for="updateName" class="col-sm-2 col-form-label">Name:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="updateName" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="updateEmail" class="col-sm-2 col-form-label">Email:</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="updateEmail" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="updateAddress" class="col-sm-2 col-form-label">Address:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="updateAddress" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="updateMobile" class="col-sm-2 col-form-label">Mobile:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="updateMobile" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="updateUnits" class="col-sm-2 col-form-label">Units Consumed:</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="updateUnits" required>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <div class="col-sm-10 offset-sm-2">
+                            <button type="button" class="btn btn-primary" onclick="updateCustomer()">
+                                <i class="bi bi-pencil-square"></i> Update Customer
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div id="updateMessage" class="message"></div>
+            </div>
+            
+            <!-- Delete Tab -->
+            <div class="tab-pane fade" id="delete" role="tabpanel">
+                <h3 class="mb-4">Delete Customer</h3>
+                <div class="search-section">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="deleteSearchId" class="col-form-label">Search by ID:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="number" id="deleteSearchId" class="form-control">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" onclick="searchCustomerForDelete()">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="deleteSearchMessage" class="message"></div>
+
+                <div id="deleteCustomerDetails" class="card mt-3" style="display: none;">
+                    <div class="card-header">
+                        <h5>Customer Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Name:</strong> <span id="deleteName"></span></p>
+                        <p><strong>Email:</strong> <span id="deleteEmail"></span></p>
+                        <p><strong>Address:</strong> <span id="deleteAddress"></span></p>
+                        <p><strong>Mobile:</strong> <span id="deleteMobile"></span></p>
+                        <p><strong>Units Consumed:</strong> <span id="deleteUnits"></span></p>
+                        <button class="btn btn-danger" onclick="confirmDelete()">
+                            <i class="bi bi-trash"></i> Delete Customer
+                        </button>
+                    </div>
+                </div>
+                <div id="deleteMessage" class="message"></div>
+            </div>
+            
+            <!-- Search Tab -->
+            <div class="tab-pane fade" id="search" role="tabpanel">
+                <h3 class="mb-4">Search Customer</h3>
+                <div class="search-section">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="searchMobile" class="col-form-label">Search by Mobile:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="text" id="searchMobile" class="form-control">
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-primary" onclick="searchCustomerByMobile()">Search</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="searchMessage" class="message"></div>
+
+                <div class="table-responsive mt-3">
+                    <table id="searchResultTable" class="table table-striped" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Address</th>
+                                <th>Mobile</th>
+                                <th>Units</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchResultBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Global variables
+        let customerList = [];
+        let currentCustomerId = null;
+
+        // Load all customers when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllCustomers();
+        });
+
+        // View Tab Functions
+        function loadAllCustomers() {
+            fetch("http://localhost:8080/pahana_edu_rest/api/customers")
+                .then(res => {
+                    if (!res.ok) throw new Error("Failed to load customers");
+                    return res.json();
+                })
+                .then(customers => {
+                    populateCustomerTable(customers);
+                    showMessage("viewMessage", "✅ Loaded all customers", "success-message");
+                })
+                .catch(err => {
+                    showMessage("viewMessage", "❌ " + err.message, "error-message");
+                    document.getElementById("customerTableBody").innerHTML = "";
+                });
+        }
+
+        function populateCustomerTable(customers) {
+            const tbody = document.getElementById("customerTableBody");
+            tbody.innerHTML = "";
+
+            if (customers.length === 0) {
+                showMessage("viewMessage", "No customers found", "error-message");
+                return;
+            }
+
+            customers.forEach(customer => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.address}</td>
+                    <td>${customer.mobile}</td>
+                    <td>${customer.unit_consumed}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary action-btn" onclick="openUpdateTab(${customer.id})">
+                            <i class="bi bi-pencil"></i> Update
+                        </button>
+                        <button class="btn btn-sm btn-danger action-btn" onclick="openDeleteTab(${customer.id})">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Create Tab Functions
+        function createCustomer() {
+            const customer = {
+                name: document.getElementById("createName").value,
+                email: document.getElementById("createEmail").value,
+                address: document.getElementById("createAddress").value,
+                mobile: document.getElementById("createMobile").value,
+                unit_consumed: parseInt(document.getElementById("createUnits").value)
+            };
+
+            fetch("http://localhost:8080/pahana_edu_rest/api/customers", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(customer)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Failed to create customer");
+                return res.json();
+            })
+            .then(data => {
+                showMessage("createMessage", "✅ Customer created successfully", "success-message");
+                document.getElementById("createForm").reset();
+                // Refresh the view tab
+                loadAllCustomers();
+            })
+            .catch(err => {
+                showMessage("createMessage", "❌ " + err.message, "error-message");
+            });
+        }
+
+        // Bulk Creation Functions
+        function addCustomerToList() {
+            const customer = {
+                name: document.getElementById("bulkName").value,
+                email: document.getElementById("bulkEmail").value,
+                address: document.getElementById("bulkAddress").value,
+                mobile: document.getElementById("bulkMobile").value,
+                unit_consumed: parseInt(document.getElementById("bulkUnits").value)
+            };
+
+            customerList.push(customer);
+            updateBulkPreviewTable();
+            document.getElementById("bulkForm").reset();
+        }
+
+        function updateBulkPreviewTable() {
+            const tbody = document.getElementById("bulkPreviewBody");
+            tbody.innerHTML = "";
+            customerList.forEach((customer, index) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${customer.name}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.address}</td>
+                    <td>${customer.mobile}</td>
+                    <td>${customer.unit_consumed}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger" onclick="removeCustomerFromList(${index})">
+                            <i class="bi bi-trash"></i> Remove
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function removeCustomerFromList(index) {
+            customerList.splice(index, 1);
+            updateBulkPreviewTable();
+        }
+
+        function submitAllCustomers() {
+            if (customerList.length === 0) {
+                showMessage("bulkMessage", "❌ Add at least one customer", "error-message");
+                return;
+            }
+
+            // Show spinner
+            document.getElementById("loadingSpinner").style.display = "flex";
+
+            fetch("http://localhost:8080/pahana_edu_rest/api/customers/bulk", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(customerList)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Submission failed");
+                return res.json();
+            })
+            .then(response => {
+                showMessage("bulkMessage", "✅ Customers created successfully!", "success-message");
+                customerList = [];
+                updateBulkPreviewTable();
+                // Refresh the view tab
+                loadAllCustomers();
+            })
+            .catch(err => {
+                showMessage("bulkMessage", "❌ " + err.message, "error-message");
+            })
+            .finally(() => {
+                // Hide spinner after request finished
+                document.getElementById("loadingSpinner").style.display = "none";
+            });
+        }
+
+        // Update Tab Functions
+        function searchCustomerForUpdate() {
+            const id = document.getElementById("updateSearchId").value;
+            if (!id) {
+                showMessage("updateSearchMessage", "❌ Please enter an ID", "error-message");
+                return;
+            }
+
+            fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Customer not found");
+                    return res.json();
+                })
+                .then(customer => {
+                    currentCustomerId = customer.id;
+                    document.getElementById("updateCustomerId").value = customer.id;
+                    document.getElementById("updateName").value = customer.name;
+                    document.getElementById("updateEmail").value = customer.email;
+                    document.getElementById("updateAddress").value = customer.address;
+                    document.getElementById("updateMobile").value = customer.mobile;
+                    document.getElementById("updateUnits").value = customer.unit_consumed;
+                    document.getElementById("updateForm").style.display = "block";
+                    showMessage("updateSearchMessage", `✅ Found customer: ${customer.name}`, "success-message");
+                    showMessage("updateMessage", "", "");
+                })
+                .catch(err => {
+                    document.getElementById("updateForm").style.display = "none";
+                    showMessage("updateSearchMessage", "❌ " + err.message, "error-message");
+                });
+        }
+
+        function updateCustomer() {
+            const updatedCustomer = {
+                name: document.getElementById("updateName").value,
+                email: document.getElementById("updateEmail").value,
+                address: document.getElementById("updateAddress").value,
+                mobile: document.getElementById("updateMobile").value,
+                unit_consumed: parseInt(document.getElementById("updateUnits").value)
+            };
+
+            fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${currentCustomerId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedCustomer)
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Update failed");
+                return res.json();
+            })
+            .then(data => {
+                showMessage("updateMessage", "✅ Customer updated successfully", "success-message");
+                document.getElementById("updateForm").reset();
+                document.getElementById("updateForm").style.display = "none";
+                // Refresh the view tab
+                loadAllCustomers();
+            })
+            .catch(err => {
+                showMessage("updateMessage", "❌ " + err.message, "error-message");
+            });
+        }
+
+        function openUpdateTab(id) {
+            document.getElementById("updateSearchId").value = id;
+            searchCustomerForUpdate();
+            // Switch to update tab
+            const updateTab = new bootstrap.Tab(document.getElementById('update-tab'));
+            updateTab.show();
+        }
+
+        // Delete Tab Functions
+        function searchCustomerForDelete() {
+            const id = document.getElementById("deleteSearchId").value;
+            if (!id) {
+                showMessage("deleteSearchMessage", "❌ Please enter an ID", "error-message");
+                return;
+            }
+
+            fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${id}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Customer not found");
+                    return res.json();
+                })
+                .then(customer => {
+                    currentCustomerId = customer.id;
+                    document.getElementById("deleteName").textContent = customer.name;
+                    document.getElementById("deleteEmail").textContent = customer.email;
+                    document.getElementById("deleteAddress").textContent = customer.address;
+                    document.getElementById("deleteMobile").textContent = customer.mobile;
+                    document.getElementById("deleteUnits").textContent = customer.unit_consumed;
+                    document.getElementById("deleteCustomerDetails").style.display = "block";
+                    showMessage("deleteSearchMessage", `✅ Found customer: ${customer.name}`, "success-message");
+                    showMessage("deleteMessage", "", "");
+                })
+                .catch(err => {
+                    document.getElementById("deleteCustomerDetails").style.display = "none";
+                    showMessage("deleteSearchMessage", "❌ " + err.message, "error-message");
+                });
+        }
+
+        function confirmDelete() {
+            if (!confirm("Are you sure you want to delete this customer?")) return;
+
+            fetch(`http://localhost:8080/pahana_edu_rest/api/customers/${currentCustomerId}`, {
+                method: "DELETE"
+            })
+            .then(res => {
+                if (!res.ok) throw new Error("Delete failed");
+                showMessage("deleteMessage", "✅ Customer deleted successfully", "success-message");
+                document.getElementById("deleteCustomerDetails").style.display = "none";
+                document.getElementById("deleteSearchId").value = "";
+                // Refresh the view tab
+                loadAllCustomers();
+            })
+            .catch(err => {
+                showMessage("deleteMessage", "❌ " + err.message, "error-message");
+            });
+        }
+
+        function openDeleteTab(id) {
+            document.getElementById("deleteSearchId").value = id;
+            searchCustomerForDelete();
+            // Switch to delete tab
+            const deleteTab = new bootstrap.Tab(document.getElementById('delete-tab'));
+            deleteTab.show();
+        }
+
+        // Search Tab Functions
+        function searchCustomerByMobile() {
+            const mobile = document.getElementById("searchMobile").value;
+            if (!mobile) {
+                showMessage("searchMessage", "❌ Please enter a mobile number", "error-message");
+                return;
+            }
+
+            fetch(`http://localhost:8080/pahana_edu_rest/api/customers/mobile/${mobile}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("Customer not found");
+                    return res.json();
+                })
+                .then(customer => {
+                    const tbody = document.getElementById("searchResultBody");
+                    tbody.innerHTML = `
+                        <tr>
+                            <td>${customer.id}</td>
+                            <td>${customer.name}</td>
+                            <td>${customer.email}</td>
+                            <td>${customer.address}</td>
+                            <td>${customer.mobile}</td>
+                            <td>${customer.unit_consumed}</td>
+                        </tr>
+                    `;
+                    document.getElementById("searchResultTable").style.display = "table";
+                    showMessage("searchMessage", `✅ Found customer: ${customer.name}`, "success-message");
+                })
+                .catch(err => {
+                    document.getElementById("searchResultTable").style.display = "none";
+                    showMessage("searchMessage", "❌ " + err.message, "error-message");
+                });
+        }
+
+        // Helper function
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+        }
+    </script>

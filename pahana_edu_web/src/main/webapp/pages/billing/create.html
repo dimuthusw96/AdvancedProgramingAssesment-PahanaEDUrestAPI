@@ -1,201 +1,262 @@
-<h3>Create Bill</h3>
+<div class="container bill-container">
+        <h3 class="mb-4">Create Bill</h3>
+        
+        <!-- Customer Section -->
+        <div class="customer-info">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <label for="customerIdInput" class="form-label">Customer Mobile:</label>
+                    <input type="number" id="customerIdInput" class="form-control" placeholder="Enter customer mobile">
+                </div>
+                <div class="col-md-2">
+                    <button onclick="loadCustomer()" class="btn btn-primary mt-4">
+                        <i class="bi bi-search"></i> Load Customer
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <p id="customerName" class="mt-3 fw-bold"></p>
+                </div>
+            </div>
+        </div>
 
-<label>Customer ID (mobile):</label>
-<input type="number" id="customerIdInput" />
-<button onclick="loadCustomer()">Load Customer</button>
-<p id="customerName"></p>
+        <hr/>
 
-<hr/>
+        <!-- Add Items Section -->
+        <h4 class="mb-3">Add Items</h4>
+        <div class="item-input-group">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-3">
+                    <label for="itemIdInput" class="form-label">Item ID:</label>
+                    <input type="number" id="itemIdInput" class="form-control" placeholder="Enter item ID">
+                </div>
+                <div class="col-md-2">
+                    <button onclick="addItem()" class="btn btn-primary mt-4">
+                        <i class="bi bi-plus-circle"></i> Add Item
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<h4>Add Items</h4>
-<label>Item ID:</label>
-<input type="number" id="itemIdInput" />
-<button onclick="addItem()">Add Item</button>
+        <!-- Items Table -->
+        <div class="table-responsive">
+            <table id="itemsTable" class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Item ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Available Qty</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="itemsBody"></tbody>
+            </table>
+        </div>
 
-<table border="1" id="itemsTable" style="width: 100%; margin-top: 20px; display:none;">
-  <thead>
-    <tr>
-      <th>Item ID</th>
-      <th>Name</th>
-      <th>Price</th>
-      <th>Available Qty</th>
-      <th>Quantity</th>
-      <th>Subtotal</th>
-      <th>Remove</th>
-    </tr>
-  </thead>
-  <tbody id="itemsBody"></tbody>
-</table>
+        <!-- Total Section -->
+        <div class="total-section text-end">
+            Total Bill: $<span id="totalBill">0.00</span>
+        </div>
 
-<h4>Total Bill: $<span id="totalBill">0.00</span></h4><br/>
+        <!-- Save Button -->
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button onclick="saveBill()" class="btn btn-success btn-lg">
+                <i class="bi bi-save"></i> Save Bill
+            </button>
+        </div>
 
-<button onclick="saveBill()">Save Bill</button>
+        <!-- Message Alert -->
+        <div id="msg" class="mt-3 alert alert-danger" style="display: none;"></div>
+    </div>
 
-<p id="msg" style="color:red;"></p>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-  let customer = null;
-  let items = [];
+    <script>
+        let customer = null;
+        let items = [];
 
-  function loadCustomer() {
-    const custId = document.getElementById('customerIdInput').value;
-    if (!custId) {
-      alert('Please enter a Customer ID');
-      return;
-    }
+        function loadCustomer() {
+            const custId = document.getElementById('customerIdInput').value;
+            if (!custId) {
+                showMessage('Please enter a Customer Mobile');
+                return;
+            }
 
-    fetch(`http://localhost:8080/pahana_edu_rest/api/customers/mobile/${custId}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Customer not found');
-        return res.json();
-      })
-      .then(data => {
-        customer = data;
-        document.getElementById('customerName').textContent = `Customer Name: ${customer.name}`;
-        document.getElementById('msg').textContent = '';
-      })
-      .catch(err => {
-        customer = null;
-        document.getElementById('customerName').textContent = '';
-        document.getElementById('msg').textContent = err.message;
-      });
-  }
-
-  function addItem() {
-    const itemId = document.getElementById('itemIdInput').value;
-    if (!itemId) {
-      alert('Please enter an Item ID');
-      return;
-    }
-
-    if (items.find(i => i.id == itemId)) {
-      alert('Item already added');
-      return;
-    }
-
-    fetch(`http://localhost:8080/pahana_edu_rest/api/items/${itemId}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Item not found');
-        return res.json();
-      })
-      .then(item => {
-        if (item.quantity <= 0) {
-          alert(`Item "${item.name}" is out of stock and cannot be added.`);
-          return;
+            fetch(`http://localhost:8080/pahana_edu_rest/api/customers/mobile/${custId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Customer not found');
+                    return res.json();
+                })
+                .then(data => {
+                    customer = data;
+                    document.getElementById('customerName').textContent = `Customer: ${customer.name} (${customer.mobile})`;
+                    hideMessage();
+                })
+                .catch(err => {
+                    customer = null;
+                    document.getElementById('customerName').textContent = '';
+                    showMessage(err.message);
+                });
         }
 
-        item.quantitySelected = 1;
-        items.push(item);
-        renderItemsTable();
-        document.getElementById('itemIdInput').value = '';
-        document.getElementById('msg').textContent = '';
-      })
-      .catch(err => {
-        document.getElementById('msg').textContent = err.message;
-      });
-  }
+        function addItem() {
+            const itemId = document.getElementById('itemIdInput').value;
+            if (!itemId) {
+                showMessage('Please enter an Item ID');
+                return;
+            }
 
-  function renderItemsTable() {
-    if (items.length === 0) {
-      document.getElementById('itemsTable').style.display = 'none';
-      document.getElementById('totalBill').textContent = '0.00';
-      return;
-    }
+            if (items.find(i => i.id == itemId)) {
+                showMessage('Item already added');
+                return;
+            }
 
-    document.getElementById('itemsTable').style.display = 'table';
-    const tbody = document.getElementById('itemsBody');
-    tbody.innerHTML = '';
+            fetch(`http://localhost:8080/pahana_edu_rest/api/items/${itemId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Item not found');
+                    return res.json();
+                })
+                .then(item => {
+                    if (item.quantity <= 0) {
+                        showMessage(`Item "${item.name}" is out of stock and cannot be added.`);
+                        return;
+                    }
 
-    items.forEach((item, index) => {
-      const subtotal = (item.price * item.quantitySelected).toFixed(2);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${item.id}</td>
-        <td>${item.name}</td>
-        <td>${item.price.toFixed(2)}</td>
-        <td>${item.quantity}</td>
-        <td>
-          <input type="number" min="1" max="${item.quantity}" value="${item.quantitySelected}" 
-            onchange="updateQty(${index}, this.value)" />
-        </td>
-        <td>${subtotal}</td>
-        <td><button onclick="removeItem(${index})">Remove</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
+                    item.quantitySelected = 1;
+                    items.push(item);
+                    renderItemsTable();
+                    document.getElementById('itemIdInput').value = '';
+                    hideMessage();
+                })
+                .catch(err => {
+                    showMessage(err.message);
+                });
+        }
 
-    updateTotal();
-  }
+        function renderItemsTable() {
+            if (items.length === 0) {
+                document.getElementById('itemsTable').style.display = 'none';
+                document.getElementById('totalBill').textContent = '0.00';
+                return;
+            }
 
-  function updateQty(index, qty) {
-    qty = Number(qty);
-    if (qty < 1) qty = 1;
+            document.getElementById('itemsTable').style.display = 'table';
+            const tbody = document.getElementById('itemsBody');
+            tbody.innerHTML = '';
 
-    if (qty > items[index].quantity) {
-      alert(`Quantity cannot exceed available stock (${items[index].quantity})`);
-      qty = items[index].quantity;
-    }
+            items.forEach((item, index) => {
+                const subtotal = (item.price * item.quantitySelected).toFixed(2);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>$${item.price.toFixed(2)}</td>
+                    <td>${item.quantity}</td>
+                    <td>
+                        <input type="number" class="form-control quantity-input" 
+                            min="1" max="${item.quantity}" value="${item.quantitySelected}" 
+                            onchange="updateQty(${index}, this.value)" />
+                    </td>
+                    <td>$${subtotal}</td>
+                    <td>
+                        <button onclick="removeItem(${index})" class="btn btn-danger btn-action">Remove
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
 
-    items[index].quantitySelected = qty;
-    renderItemsTable();
-  }
+            updateTotal();
+        }
 
-  function removeItem(index) {
-    items.splice(index, 1);
-    renderItemsTable();
-  }
+        function updateQty(index, qty) {
+            qty = Number(qty);
+            if (qty < 1) qty = 1;
 
-  function updateTotal() {
-    let total = 0;
-    items.forEach(i => {
-      total += i.price * i.quantitySelected;
-    });
-    document.getElementById('totalBill').textContent = total.toFixed(2);
-  }
+            if (qty > items[index].quantity) {
+                showMessage(`Quantity cannot exceed available stock (${items[index].quantity})`);
+                qty = items[index].quantity;
+            }
 
-  function saveBill() {
-    if (!customer) {
-      alert('Please load a valid customer first');
-      return;
-    }
+            items[index].quantitySelected = qty;
+            renderItemsTable();
+        }
 
-    if (items.length === 0) {
-      alert('Please add at least one item');
-      return;
-    }
+        function removeItem(index) {
+            items.splice(index, 1);
+            renderItemsTable();
+        }
 
-    const billItems = items.map(item => ({
-      item: { id: item.id },
-      quantity: item.quantitySelected,
-      price: item.price,
-      subtotal: item.price * item.quantitySelected
-    }));
+        function updateTotal() {
+            let total = 0;
+            items.forEach(i => {
+                total += i.price * i.quantitySelected;
+            });
+            document.getElementById('totalBill').textContent = total.toFixed(2);
+        }
 
-    const totalAmount = billItems.reduce((sum, i) => sum + i.subtotal, 0);
+        function saveBill() {
+            if (!customer) {
+                showMessage('Please load a valid customer first');
+                return;
+            }
 
-    const bill = {
-      customer: { id: customer.id },
-      billDate: new Date(),
-      totalAmount: totalAmount,
-      billItems: billItems
-    };
+            if (items.length === 0) {
+                showMessage('Please add at least one item');
+                return;
+            }
 
-    fetch('http://localhost:8080/pahana_edu_rest/api/bills', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(bill)
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to create bill');
-        return res.json();
-      })
-      .then(data => {
-        alert('Bill created successfully!');
-        window.open(`pages/billing/print.html?billId=${data.id}`,'_blank');
-                
-      })
-      .catch(err => {
-        alert(err.message);
-      });
-  }
-</script>
+            const billItems = items.map(item => ({
+                item: { id: item.id },
+                quantity: item.quantitySelected,
+                price: item.price,
+                subtotal: item.price * item.quantitySelected
+            }));
+
+            const totalAmount = billItems.reduce((sum, i) => sum + i.subtotal, 0);
+
+            const bill = {
+                customer: { id: customer.id },
+                billDate: new Date(),
+                totalAmount: totalAmount,
+                billItems: billItems
+            };
+
+            fetch('http://localhost:8080/pahana_edu_rest/api/bills', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bill)
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to create bill');
+                    return res.json();
+                })
+                .then(data => {
+                    alert('Bill created successfully!');
+                    window.open(`pages/billing/print.html?billId=${data.id}`,'_blank');
+                    // Reset form
+                    customer = null;
+                    items = [];
+                    document.getElementById('customerIdInput').value = '';
+                    document.getElementById('customerName').textContent = '';
+                    renderItemsTable();
+                })
+                .catch(err => {
+                    showMessage(err.message);
+                });
+        }
+
+        function showMessage(message) {
+            const msgElement = document.getElementById('msg');
+            msgElement.textContent = message;
+            msgElement.style.display = 'block';
+        }
+
+        function hideMessage() {
+            document.getElementById('msg').style.display = 'none';
+        }
+    </script>

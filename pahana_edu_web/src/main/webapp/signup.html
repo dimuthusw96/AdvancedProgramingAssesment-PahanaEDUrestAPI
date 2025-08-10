@@ -26,64 +26,106 @@
   </div>
 
   <script>
-      
-      async function isUsernameTaken(username) {
-  const response = await fetch("http://localhost:8080/pahana_edu_rest/api/user/alreadyuser", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ userName: username })
-  });
+    
+       // Simple SHA-256 hashing (matches signup if you're using basic hashing)
+    async function hashPassword(password) {
+      try {
+        // Encode password as UTF-8
+        const encoder = new TextEncoder();
+        const passwordBuffer = encoder.encode(password);
+        
+        // Hash with SHA-256
+        const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBuffer);
+        
+        // Convert to hex string
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (error) {
+        console.error('Password hashing error:', error);
+        throw new Error('Password processing failed');
+      }
+    }
 
-  if (!response.ok) {
-    // Handle error or assume username not taken
-    return false;
-  }
+    async function isUsernameTaken(username) {
+      const response = await fetch("http://localhost:8080/pahana_edu_rest/api/user/alreadyuser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userName: username })
+      });
 
-  // The response body is a boolean (true/false)
-  const exists = await response.json(); // directly true or false
-  return exists;
-}
+      if (!response.ok) {
+        return false;
+      }
 
-async function signup() {
-  const msg = document.getElementById("signupMessage");
-  const usernameInput = document.getElementById("newUsername").value.trim();
-  const passwordInput = document.getElementById("newPassword").value;
+      const exists = await response.json();
+      return exists;
+    }
 
-  if (!usernameInput || !passwordInput) {
-    msg.textContent = "Please enter username and password.";
-    msg.className = "text-danger mt-2";
-    return;
-  }
+    async function signup() {
+      const msg = document.getElementById("signupMessage");
+      const usernameInput = document.getElementById("newUsername").value.trim();
+      const passwordInput = document.getElementById("newPassword").value;
 
-  const taken = await isUsernameTaken(usernameInput);
-  if (taken) {
-    msg.textContent = "Username is already taken. Please choose another.";
-    msg.className = "text-danger mt-2";
-    return;
-  }
+      // Clear previous messages
+      msg.textContent = '';
+      msg.className = '';
 
-  // Proceed with signup
-  const user = {
-    userName: usernameInput,
-    password: passwordInput
-  };
+      if (!usernameInput || !passwordInput) {
+        showError(msg, "Please enter username and password.");
+        return;
+      }
 
-  const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/create", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user)
-  });
+      if (passwordInput.length < 8) {
+        showError(msg, "Password must be at least 8 characters long.");
+        return;
+      }
 
-  if (res.ok) {
-    msg.textContent = "Signup successful! You can now log in.";
-    msg.className = "text-success mt-2";
-  } else {
-    msg.textContent = "Signup failed.";
-    msg.className = "text-danger mt-2";
-  }
-}
+      try {
+        // Check if username is available
+        const taken = await isUsernameTaken(usernameInput);
+        if (taken) {
+          showError(msg, "Username is already taken. Please choose another.");
+          return;
+        }
 
-   
+        // Hash the password
+        msg.textContent = "Processing...";
+           const hashedPassword = await hashPassword(passwordInput);
+
+        // Create user account
+        const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userName: usernameInput,
+            password: hashedPassword,
+          
+          })
+        });
+
+        if (res.ok) {
+          showSuccess(msg, "Signup successful! You can now log in.");
+          document.getElementById("newUsername").value = "";
+          document.getElementById("newPassword").value = "";
+        } else {
+          const error = await res.json();
+          showError(msg, error.message || "Signup failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        showError(msg, error.message || "An error occurred. Please try again.");
+      }
+    }
+
+    function showError(element, message) {
+      element.textContent = message;
+      element.className = "text-danger mt-2";
+    }
+
+    function showSuccess(element, message) {
+      element.textContent = message;
+      element.className = "text-success mt-2";
+    }
   </script>
 </body>
 </html>

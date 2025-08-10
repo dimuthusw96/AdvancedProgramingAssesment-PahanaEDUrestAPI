@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>Pahana EDU ERP</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link href="css/bootstrap.css" rel="stylesheet">
   <style>
     .submenu { display: none; background-color: #495057; padding-left: 20px; }
     .submenu a { display: block; padding: 10px; color: white; text-decoration: none; }
@@ -23,6 +24,7 @@
     <div class="menu-toggle" onclick="toggleSubMenuCustomer()">Customer ▾</div>
     <div class="submenu" id="customerSubMenu">
       <a href="#" onclick="loadPage('pages/customer/view.html')">View All Customers</a>
+      <a href="#" onclick="loadPage('pages/customer/customermanage.html')">Customers Management</a>
       <a href="#" onclick="loadPage('pages/customer/search.html')">Search Customer by ID</a>
       <a href="#" onclick="loadPage('pages/customer/create.html')">Create Customer</a>
       <a href="#" onclick="loadPage('pages/customer/update.html')">Update Customer</a>
@@ -32,6 +34,7 @@
     <div class="menu-toggle" onclick="toggleSubMenuItem()">Items ▾</div>
     <div class="submenu" id="itemSubMenu">
       <a href="#" onclick="loadPage('pages/item/add.html')">Add Item</a>
+       <a href="#" onclick="loadPage('pages/item/itemmanage.html')">Item Management</a>
       <a href="#" onclick="loadPage('pages/item/update.html')">Update Item</a>
       <a href="#" onclick="loadPage('pages/item/delete.html')">Delete Item</a>
       <a href="#" onclick="loadPage('pages/item/view.html')">View Item</a>
