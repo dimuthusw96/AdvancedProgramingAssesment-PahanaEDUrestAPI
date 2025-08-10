@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: restAPI CI
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      working-directory: pahana_edu_rest/pom.xml
+      working-directory: pahana_edu_rest
       run: mvn clean install -Dmaven.test.skip=true
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
