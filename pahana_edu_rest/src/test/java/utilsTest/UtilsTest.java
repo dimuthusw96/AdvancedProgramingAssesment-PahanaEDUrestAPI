@@ -52,9 +52,9 @@ public class UtilsTest {
 
     @Test
     public void testGetCustomerById() {
-        Customer customer = customerService.getCustomerById(359);
+        Customer customer = customerService.getCustomerById(375);
         assertNotNull(customer);
-        assertEquals(359, customer.getId());
+        assertEquals(375, customer.getId());
         assertNotNull(customer.getName());
     }
 
