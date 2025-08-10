@@ -18,7 +18,7 @@
         <input type="password" class="form-control" id="password" required>
       </div>
       <button class="btn btn-primary w-100" onclick="login()">Login</button>
-      <div id="message" class="mt-3 text-danger"></div>
+      <div id="message" class="mt-3"></div>
       <div class="mt-3 text-center">
         Don't have an account? <a href="signup.html">Sign Up</a>
       </div>
@@ -26,25 +26,70 @@
   </div>
 
   <script>
-    async function login() {
-      const user = {
-        userName: document.getElementById("username").value,
-        password: document.getElementById("password").value
-      };
-
-      const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user)
-      });
-
-      if (res.ok) {
-        const userData = await res.json();
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        window.location.href = "home.html";
-      } else {
-        document.getElementById("message").textContent = "Invalid username or password.";
+     // Simple SHA-256 hashing (matches signup if you're using basic hashing)
+    async function hashPassword(password) {
+      try {
+        // Encode password as UTF-8
+        const encoder = new TextEncoder();
+        const passwordBuffer = encoder.encode(password);
+        
+        // Hash with SHA-256
+        const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBuffer);
+        
+        // Convert to hex string
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (error) {
+        console.error('Password hashing error:', error);
+        throw new Error('Password processing failed');
       }
+    }
+    async function login() {
+      const msg = document.getElementById("message");
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      // Clear previous messages
+      msg.textContent = '';
+      msg.className = '';
+
+      if (!username || !password) {
+        showError(msg, "Please enter both username and password.");
+        return;
+      }
+
+      try {
+        msg.textContent = "Authenticating...";
+        
+        // Hash the password
+        const hashedPassword = await hashPassword(password);
+
+        // Validate credentials
+        const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/validate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userName: username,
+            password: hashedPassword
+          })
+        });
+
+        if (res.ok) {
+          const userData = await res.json();
+          sessionStorage.setItem("user", JSON.stringify(userData));
+          window.location.href = "home.html";
+        } else {
+          showError(msg, "Invalid username or password.");
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        showError(msg, "An error occurred. Please try again.");
+      }
+    }
+
+    function showError(element, message) {
+      element.textContent = message;
+      element.className = "text-danger mt-2";
     }
   </script>
 </body>

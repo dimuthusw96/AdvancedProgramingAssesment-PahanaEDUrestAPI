@@ -26,9 +26,24 @@
   </div>
 
   <script>
- // Function to hash password using SHA-256
-    function hashPassword(password) {
-      return CryptoJS.SHA256(password).toString(CryptoJS.enc.Hex);
+    
+       // Simple SHA-256 hashing (matches signup if you're using basic hashing)
+    async function hashPassword(password) {
+      try {
+        // Encode password as UTF-8
+        const encoder = new TextEncoder();
+        const passwordBuffer = encoder.encode(password);
+        
+        // Hash with SHA-256
+        const hashBuffer = await crypto.subtle.digest('SHA-256', passwordBuffer);
+        
+        // Convert to hex string
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      } catch (error) {
+        console.error('Password hashing error:', error);
+        throw new Error('Password processing failed');
+      }
     }
 
     async function isUsernameTaken(username) {
@@ -39,11 +54,9 @@
       });
 
       if (!response.ok) {
-        // Handle error or assume username not taken
         return false;
       }
 
-      // The response body is a boolean (true/false)
       const exists = await response.json();
       return exists;
     }
@@ -53,59 +66,66 @@
       const usernameInput = document.getElementById("newUsername").value.trim();
       const passwordInput = document.getElementById("newPassword").value;
 
+      // Clear previous messages
+      msg.textContent = '';
+      msg.className = '';
+
       if (!usernameInput || !passwordInput) {
-        msg.textContent = "Please enter username and password.";
-        msg.className = "text-danger mt-2";
+        showError(msg, "Please enter username and password.");
         return;
       }
 
       if (passwordInput.length < 8) {
-        msg.textContent = "Password must be at least 8 characters long.";
-        msg.className = "text-danger mt-2";
+        showError(msg, "Password must be at least 8 characters long.");
         return;
       }
-
-      const taken = await isUsernameTaken(usernameInput);
-      if (taken) {
-        msg.textContent = "Username is already taken. Please choose another.";
-        msg.className = "text-danger mt-2";
-        return;
-      }
-
-      // Hash the password before sending
-      const hashedPassword = hashPassword(passwordInput);
-
-      // Proceed with signup
-      const user = {
-        userName: usernameInput,
-        password: hashedPassword  // Send the hashed password
-      };
 
       try {
+        // Check if username is available
+        const taken = await isUsernameTaken(usernameInput);
+        if (taken) {
+          showError(msg, "Username is already taken. Please choose another.");
+          return;
+        }
+
+        // Hash the password
+        msg.textContent = "Processing...";
+           const hashedPassword = await hashPassword(passwordInput);
+
+        // Create user account
         const res = await fetch("http://localhost:8080/pahana_edu_rest/api/user/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(user)
+          body: JSON.stringify({
+            userName: usernameInput,
+            password: hashedPassword,
+          
+          })
         });
 
         if (res.ok) {
-          msg.textContent = "Signup successful! You can now log in.";
-          msg.className = "text-success mt-2";
-          // Clear form after successful signup
+          showSuccess(msg, "Signup successful! You can now log in.");
           document.getElementById("newUsername").value = "";
           document.getElementById("newPassword").value = "";
         } else {
-          const errorData = await res.json();
-          msg.textContent = errorData.message || "Signup failed. Please try again.";
-          msg.className = "text-danger mt-2";
+          const error = await res.json();
+          showError(msg, error.message || "Signup failed. Please try again.");
         }
       } catch (error) {
-        msg.textContent = "Network error. Please try again.";
-        msg.className = "text-danger mt-2";
         console.error("Signup error:", error);
+        showError(msg, error.message || "An error occurred. Please try again.");
       }
     }
-   
+
+    function showError(element, message) {
+      element.textContent = message;
+      element.className = "text-danger mt-2";
+    }
+
+    function showSuccess(element, message) {
+      element.textContent = message;
+      element.className = "text-success mt-2";
+    }
   </script>
 </body>
 </html>
