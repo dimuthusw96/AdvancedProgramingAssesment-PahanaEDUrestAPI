@@ -63,14 +63,14 @@ public class ItemService {
     }
 
     public boolean createItem(Item item) {
-        String query = "INSERT INTO items (name, price, quantity) VALUES (?, ?, ?)";
+        String query = "INSERT INTO items (name, price, quantity,reorderlevel) VALUES (?, ?, ?,?)";
 
         try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             pstmt.setString(1, item.getName());
             pstmt.setDouble(2, item.getPrice());
             pstmt.setInt(3, item.getQuantity());
-
+pstmt.setInt(4, (item.getQuantity()*20/100));
             int rowsInserted = pstmt.executeUpdate();
 
             if (rowsInserted > 0) {
@@ -88,14 +88,15 @@ public class ItemService {
     }
 
     public boolean updateItem(Item item) {
-        String query = "UPDATE items SET name = ?, price = ?, quantity = ? WHERE id = ?";
+        String query = "UPDATE items SET name = ?, price = ?, quantity = ?, reorderlevel=? WHERE id = ?";
 
         try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
             pstmt.setString(1, item.getName());
             pstmt.setDouble(2, item.getPrice());
             pstmt.setInt(3, item.getQuantity());
-            pstmt.setInt(4, item.getId());
+            pstmt.setInt(4, (item.getQuantity()*20/100));
+            pstmt.setInt(5, item.getId());
 
             int rowsUpdated = pstmt.executeUpdate();
             return rowsUpdated > 0;

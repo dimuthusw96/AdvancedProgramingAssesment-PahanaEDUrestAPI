@@ -10,6 +10,7 @@ services\CustomerService.class
 com\mycompany\pahana_edu_rest\resources\CustomerResources.class
 reports\SalesSummary.class
 Utils\BillItem.class
+reports\ReorderLevels.class
 com\mycompany\pahana_edu_rest\JakartaRestConfiguration.class
 com\mycompany\pahana_edu_rest\resources\ItemResources.class
 com\mycompany\pahana_edu_rest\resources\BillResources.class

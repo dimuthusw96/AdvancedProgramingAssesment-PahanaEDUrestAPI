@@ -11,6 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import reports.ReorderLevels;
 
 /**
  *
@@ -100,6 +101,29 @@ public class reportService {
         
         return summary;
     }
+    
+    
+     public List<ReorderLevels> getstockreorder() throws SQLException {
+     List<ReorderLevels> reorders = new ArrayList<>();
+     String query = "SELECT id, name, quantity, reorderlevel FROM items WHERE quantity <= reorderlevel ORDER BY quantity ASC;";
+     try (Connection conn = Utils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+         ResultSet rs = stmt.executeQuery();
+         
+         while (rs.next()) {
+             
+             ReorderLevels ro=new ReorderLevels();
+             ro.setId(rs.getInt("id"));
+             ro.setName(rs.getString("name"));
+             ro.setQuantity(rs.getInt("quantity"));
+             ro.setReorderlevel(rs.getInt("reorderlevel"));
+               
+                
+                reorders.add(ro);
+            }
+         return reorders;
+     }
+     }
 }
 
 
