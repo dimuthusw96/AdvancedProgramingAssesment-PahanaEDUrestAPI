@@ -13,16 +13,26 @@ public class Item {
     private String name;
     private double price;
     private int quantity;
+    private int reorderlevel;
+
+    public void setReorderlevel(int reorderlevel) {
+        this.reorderlevel = reorderlevel;
+    }
+
+    public int getReorderlevel() {
+        return reorderlevel;
+    }
     
       public Item() {
       
       }
 
-    public Item(int id, String name, double price, int quantity) {
+    public Item(int id, String name, double price, int quantity,int reorderlevel) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
+        this.reorderlevel=reorderlevel;
     }
 
     public int getId() {

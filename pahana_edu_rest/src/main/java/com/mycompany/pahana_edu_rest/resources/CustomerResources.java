@@ -41,10 +41,20 @@ public class CustomerResources {
     }
     
     @GET
-    @Path("mobile/{mobile}")
-    public Response getCustomermobile(@PathParam("mobile") int mobile) {
-        CustomerService customerservice = new CustomerService();
-        Customer customer = customerservice.getCustomerBymobile(mobile);
+@Path("/mobile/{mobile}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response getCustomerByMobile(@PathParam("mobile") String mobile) {
+    try {
+        // Validate mobile number format (basic example)
+        if (!mobile.matches("\\d{10}")) { // Ensures exactly 10 digits
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("{\"error\":\"Mobile number must be 10 digits\"}")
+                    .build();
+        }
+
+        CustomerService customerService = new CustomerService();
+        Customer customer = customerService.getCustomerBymobile(mobile);
+        
         if (customer != null) {
             return Response.ok(new Gson().toJson(customer)).build();
         } else {
@@ -52,7 +62,12 @@ public class CustomerResources {
                     .entity("{\"error\":\"Customer not found\"}")
                     .build();
         }
+    } catch (Exception e) {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                .entity("{\"error\":\"Server error: " + e.getMessage() + "\"}")
+                .build();
     }
+}
 
     @POST
     public Response createCustomer(String customerJson) {

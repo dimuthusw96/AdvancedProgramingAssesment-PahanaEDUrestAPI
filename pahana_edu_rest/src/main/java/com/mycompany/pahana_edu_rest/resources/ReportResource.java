@@ -4,10 +4,12 @@
  */
 package com.mycompany.pahana_edu_rest.resources;
 
+import com.google.gson.Gson;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import reports.DailySalesReport;
 import reports.SalesSummary;
+import reports.ReorderLevels;
 /**
  *
  * @author Dimuthu
@@ -25,6 +28,7 @@ import reports.SalesSummary;
 public class ReportResource {
     @Inject
     private services.reportService salesService;
+    
 
     @GET
     @Path("/daily")
@@ -138,4 +142,13 @@ public class ReportResource {
             return message;
         }
     }
+      private final Gson gson = new Gson();
+    @GET
+    @Path("/reorderlevels")
+    public Response getStockReorderLevels() throws SQLException {
+       return Response.ok(gson.toJson(salesService.getstockreorder())).build();
+    }
+    
+    
+    
 }

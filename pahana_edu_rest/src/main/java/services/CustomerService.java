@@ -131,13 +131,13 @@ public class CustomerService {
 
         return false;
     }
-    public Customer getCustomerBymobile(int mobile) {
+    public Customer getCustomerBymobile(String mobile) {
         Customer c = null;
         String query = "SELECT * FROM customers WHERE mobile = ?";
 
         try (Connection conn = Utils.getConnection(); PreparedStatement pstmt = conn.prepareStatement(query)) {
 
-            pstmt .setInt(1, mobile);
+            pstmt .setString(1, mobile);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
